@@ -77,7 +77,15 @@ public class BloggerController {
 		return Response.ok().entity(blog).build();
 	}
 	
-	
+	@GET
+	@Path("/blogs/{blogId}")
+	@Produces(MediaType.APPLICATION_JSON) 
+	public Response getBlog(
+			@PathParam("blogId")int blogId) {
+		System.out.println("*************PATH CALLED");
+		Blog blog = blogger.getBlog(blogId);
+		return Response.ok().entity(blog).build();
+	}
 
 	@GET
 	@Path("/noauth")

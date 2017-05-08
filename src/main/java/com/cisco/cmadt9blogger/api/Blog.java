@@ -19,7 +19,7 @@ public class Blog {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int blogId;
-	@OneToOne(cascade=CascadeType.ALL)
+	@OneToOne
 	@JoinColumn(name = "userId",updatable = false)
 	private User user;
 	private String title;
