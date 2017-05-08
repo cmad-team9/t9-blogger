@@ -1,0 +1,36 @@
+#profileUpdateScreen, #signUpScreen ,#homeScreen,#newBlogForm,#newPostForm,#blogDetails{
+	display: none;
+}
+H1 { text-align: center }
+#welcomeScreen{
+	float: right;
+    padding: 15px;
+}
+#profileOptionsBtn{
+   position:absolute;
+   top:45px;
+   right:50px;
+}
+#signUp{
+	float: right;
+    padding: 15px;
+	clear :right;
+}
+
+.form-group ,#postDetails{
+    max-width: 75%;
+	
+}
+#postDetails{
+	margin-left:15%;
+	height : 250px;
+	overflow-y: scroll;
+}
+#newBlogForm,#newPostForm {
+	margin-left: 20%;
+	margin-top: 3%;
+}
+#custom-search-input .glyphicon-search{
+    font-size: 15px;
+}
+
