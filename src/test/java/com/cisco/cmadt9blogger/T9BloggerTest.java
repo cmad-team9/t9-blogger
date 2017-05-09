@@ -9,6 +9,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.cisco.cmadt9blogger.api.Blogger;
@@ -26,26 +27,26 @@ public class T9BloggerTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		String port = System.getProperty("server.port");
-		if (port == null) {
-			RestAssured.port = Integer.valueOf(8080);
-		}
-		else{
-			RestAssured.port = Integer.valueOf(port);
-		}
-
-
-		String basePath = System.getProperty("server.base");
-		if(basePath==null){
-			basePath = "/cmad-t9blogger/";
-		}
-		RestAssured.basePath = basePath;
-
-		String baseHost = System.getProperty("server.host");
-		if(baseHost==null){
-			baseHost = "http://localhost";
-		}
-		RestAssured.baseURI = baseHost;
+//		String port = System.getProperty("server.port");
+//		if (port == null) {
+//			RestAssured.port = Integer.valueOf(8080);
+//		}
+//		else{
+//			RestAssured.port = Integer.valueOf(port);
+//		}
+//
+//
+//		String basePath = System.getProperty("server.base");
+//		if(basePath==null){
+//			basePath = "/cmad-t9blogger/";
+//		}
+//		RestAssured.basePath = basePath;
+//
+//		String baseHost = System.getProperty("server.host");
+//		if(baseHost==null){
+//			baseHost = "http://localhost";
+//		}
+//		RestAssured.baseURI = baseHost;
 	}
 
 	@AfterClass
@@ -80,7 +81,7 @@ public class T9BloggerTest {
 		}
 	}
 /******************Integration tests by RestAssured*******************************************/
-	//@Test
+	@Ignore
 	public void basicPingTest() {
 		System.out.println("uri:"+RestAssured.baseURI);
 		System.out.println(RestAssured.basePath);
@@ -89,12 +90,12 @@ public class T9BloggerTest {
 		//RestAssured.given().when().get("http://localhost:8080/cmad-t9blogger/rest/blogger/user/jul").then().statusCode(200);
 	}
 	
-	//@Test
+	@Ignore
 	public void testNoAuth() {
 		RestAssured.given().when().get("/rest/blogger/noauth").then().statusCode(200);
 	}
 	
-	//@Test
+	@Ignore
 	public void testAuth() {
 		RestAssured.given().when().get("/rest/blogger/auth").then().statusCode(401);
 	}
