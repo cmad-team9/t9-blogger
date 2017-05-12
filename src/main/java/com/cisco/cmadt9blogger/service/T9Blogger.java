@@ -7,6 +7,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.cisco.cmadt9blogger.api.Blog;
+import com.cisco.cmadt9blogger.api.BlogComment;
 import com.cisco.cmadt9blogger.api.BlogNotFoundException;
 import com.cisco.cmadt9blogger.api.Blogger;
 import com.cisco.cmadt9blogger.api.BloggerException;
@@ -18,7 +19,9 @@ import com.cisco.cmadt9blogger.api.User;
 import com.cisco.cmadt9blogger.api.UserAlreadyExistsException;
 import com.cisco.cmadt9blogger.api.UserNotFoundException;
 import com.cisco.cmadt9blogger.data.BlogDAO;
+import com.cisco.cmadt9blogger.data.CommentDAO;
 import com.cisco.cmadt9blogger.data.JPABlogDAO;
+import com.cisco.cmadt9blogger.data.JPACommentDAO;
 import com.cisco.cmadt9blogger.data.JPAUserDAO;
 import com.cisco.cmadt9blogger.data.UserDAO;
 
@@ -26,7 +29,7 @@ public class T9Blogger implements Blogger{
 
 	private UserDAO userDao = new JPAUserDAO();
 	private BlogDAO blogDao = new JPABlogDAO();
-	
+	private CommentDAO commentDAO = new JPACommentDAO();
 
 	public void signupNewUser(User user)
 			throws InvalidUserDetailsException, UserAlreadyExistsException, BloggerException {
@@ -48,7 +51,6 @@ public class T9Blogger implements Blogger{
 			throw new InvalidCredentialsException();
 		}else
 			return token;
-
 	}
 
 	public User getUserDetails(String userId) throws UserNotFoundException, BloggerException {
@@ -57,7 +59,8 @@ public class T9Blogger implements Blogger{
 			throw new UserNotFoundException();
 		return user;
 	}
-	
+
+
 	@Override
 	public void addBlog(Blog blog) throws InvalidBlogException, DuplicateBlogException, BloggerException {
 		if (blog == null)
@@ -65,9 +68,8 @@ public class T9Blogger implements Blogger{
 		/*if (blogDao.readUser(user.getUserId()) != null)
 			throw new UserAlreadyExistsException();*/
 		blogDao.createBlog(blog);
-		
 	}
-	
+
 	@Override
 	public Blog getBlog(int blogId) throws BlogNotFoundException, BloggerException {
 		Blog blog = blogDao.readBlog(blogId);
@@ -78,11 +80,20 @@ public class T9Blogger implements Blogger{
 
 	@Override
 	public List<Blog> getAllBlogs() throws BlogNotFoundException, BloggerException {
-		// TODO Auto-generated method stub
-		return null;
+		List<Blog> blogList = blogDao.getAllBlogs();
+		if (blogList == null || blogList.isEmpty())
+			throw new BlogNotFoundException();
+		return blogList;
 	}
 
-
+	@Override
+	public void updateUserProfile(User user) throws InvalidUserDetailsException, BloggerException {
+		if (user == null)
+			throw new InvalidUserDetailsException();
+		/*if (blogDao.readUser(user.getUserId()) != null)
+			throw new UserAlreadyExistsException();*/
+		userDao.updateUser(user);
+	}
 
 	private String issueToken(String userId) {
 		String jwtToken = null;
@@ -118,5 +129,22 @@ public class T9Blogger implements Blogger{
 		}
 	}
 
-	
+	@Override
+	public void addComment(BlogComment comment) throws BloggerException {
+		if(comment == null){
+			//TODO Check others
+			throw new BloggerException();
+		}
+		commentDAO.createComment(comment);
+
+	}
+
+	@Override
+	public List<BlogComment> getAllComments(int blogId) throws BlogNotFoundException, BloggerException {
+		List<BlogComment> commentList = commentDAO.getAllComments(blogId);
+		//TODO Check for other exceptions
+		if (commentList == null || commentList.isEmpty())
+			throw new BlogNotFoundException();
+		return commentList;
+	}
 }

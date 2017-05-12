@@ -5,7 +5,7 @@ import javax.persistence.Id;
 
 @Entity
 public class User {
-	
+	//TODO - Make fields as Null/Not Null, Updatable or not, encrypted if needed
 	@Id	
 	private String userId;
 	//TODO Encrypt

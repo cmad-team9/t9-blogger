@@ -1,5 +1,11 @@
 package com.cisco.cmadt9blogger.data;
 
-public interface CommentDAO {
+import java.util.List;
 
+import com.cisco.cmadt9blogger.api.BlogComment;
+
+public interface CommentDAO {
+	void createComment(BlogComment comment);
+	BlogComment readComment(int commentId);
+	List<BlogComment> getAllComments(int blogId);
 }

@@ -1,8 +1,8 @@
-#profileUpdateScreen, #signUpScreen ,#homeScreen,#newBlogForm,#newPostForm,#blogDetails{
+#loginScreen,#profileUpdateScreen, #signUpScreen ,#homeScreen,#newBlogForm,#newPostForm,#blogDetails{
 	display: none;
 }
 H1 { text-align: center }
-#welcomeScreen{
+#loginScreen{
 	float: right;
     padding: 15px;
 }

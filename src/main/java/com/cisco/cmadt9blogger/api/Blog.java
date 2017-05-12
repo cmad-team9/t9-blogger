@@ -19,29 +19,31 @@ public class Blog {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int blogId;
+
 	@OneToOne
-	@JoinColumn(name = "userId",updatable = false)
+	@JoinColumn(name = "userId")
+	//@JoinColumn(name = "userId",updatable = false)
 	private User user;
 	private String title;
 	
 	
 	@Column(length=5000)
 	private String description;
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-	private List<BlogComment> comments;
-	
-	
+	//Only delete ?
+	//@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	//private List<BlogComment> comments;
+		
 	public Blog() {
 		super();
 	}
 
-	public Blog(int blogId, User user, String title, String description, List<BlogComment> comments) {
+	public Blog(int blogId, User user, String title, String description/*, List<BlogComment> comments*/) {
 		super();
 		this.blogId = blogId;
 		this.user = user;
 		this.title = title;
 		this.description = description;
-		this.comments = comments;
+		//this.comments = comments;
 	}
 
 	public int getBlogId() {
@@ -84,13 +86,13 @@ public class Blog {
 	}
 
 
-	public List<BlogComment> getComments() {
-		return comments;
-	}
-
-
-	public void setComments(List<BlogComment> comments) {
-		this.comments = comments;
-	}
+//	public List<BlogComment> getComments() {
+//		return comments;
+//	}
+//
+//
+//	public void setComments(List<BlogComment> comments) {
+//		this.comments = comments;
+//	}
 
 }

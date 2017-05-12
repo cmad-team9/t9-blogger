@@ -1,35 +1,36 @@
 $(document).ready(function() {
+	$("#homeScreen").show();
 	$("#signUp").click(function(e) {
-		$("#welcomeScreen").hide();
+		$("#loginScreen").hide();
 		$("#signUpScreen").show();
 	});
 	$("#saveSignUpDetailsBtn").click(function(e) {
-		$("#welcomeScreen").hide();
+		$("#loginScreen").hide();
 		$("#signUpScreen").hide();
 		$("#homeScreen").show();
 	});
 	
 	$("#signIn").click(function(e) {
-		$("#welcomeScreen").hide();
+		$("#loginScreen").hide();
 		$("#signUpScreen").hide();
 		$("#homeScreen").show();
 	});
 	$("#logoutBtn").click(function(e) {
 		$("#signUpScreen").hide();
 		$("#homeScreen").hide();
-		$("#welcomeScreen").show();
+		$("#loginScreen").show();
 	});
 	
 	$("#updateProfileBtn").click(function(e) {
 		$("#signUpScreen").hide();
 		$("#homeScreen").hide();
-		$("#welcomeScreen").hide();
+		$("#loginScreen").hide();
 		$("#profileUpdateScreen").show();
 	});
 	
 	$("#newBlogBtn").click(function(e) {
 		$("#signUpScreen").hide();
-		$("#welcomeScreen").hide();
+		$("#loginScreen").hide();
 		$("#profileUpdateScreen").hide();
 		$("#newPostForm").hide();
 		$("#blogDetails").hide();
@@ -39,7 +40,7 @@ $(document).ready(function() {
 	});
 	$("#newPostBtn").click(function(e) {
 		$("#signUpScreen").hide();
-		$("#welcomeScreen").hide();
+		$("#loginScreen").hide();
 		$("#profileUpdateScreen").hide();
 		$("#newBlogForm").hide();
 		$("#blogDetails").hide();
@@ -49,7 +50,7 @@ $(document).ready(function() {
 		});
 	$("#blog1").click(function(e) {
 		$("#signUpScreen").hide();
-		$("#welcomeScreen").hide();
+		$("#loginScreen").hide();
 		$("#profileUpdateScreen").hide();
 		$("#newBlogForm").hide();
 		$("#newPostForm").hide();
@@ -59,7 +60,7 @@ $(document).ready(function() {
 		});
 	$("#post1Heading").click(function(e) {
 		$("#signUpScreen").hide();
-		$("#welcomeScreen").hide();
+		$("#loginScreen").hide();
 		$("#profileUpdateScreen").hide();
 		$("#newBlogForm").hide();
 		$("#newPostForm").hide();
@@ -69,7 +70,7 @@ $(document).ready(function() {
 		});
 	$("#post1DescriptionCloseBtn").click(function(e) {
 		$("#signUpScreen").hide();
-		$("#welcomeScreen").hide();
+		$("#loginScreen").hide();
 		$("#profileUpdateScreen").hide();
 		$("#newBlogForm").hide();
 		$("#newPostForm").hide();

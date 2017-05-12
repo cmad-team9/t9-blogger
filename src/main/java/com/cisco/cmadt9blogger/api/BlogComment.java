@@ -17,21 +17,25 @@ public class BlogComment {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int commentId;
 	private String comment;
-	@OneToOne(cascade=CascadeType.ALL)
+	@OneToOne
 	@JoinColumn(name = "userId")
 	private User commentor;
 	private Date postedDate;
+	@OneToOne
+	@JoinColumn(name = "blogId")
+	private Blog blog;
 	
 	public BlogComment() {
 		super();
 	}
 	
-	public BlogComment(int commentId, String comment, User commentor, Date postedDate) {
+	public BlogComment(int commentId, String comment, User commentor, Date postedDate, Blog blog) {
 		super();
 		this.commentId = commentId;
 		this.comment = comment;
 		this.commentor = commentor;
 		this.postedDate = postedDate;
+		this.blog = blog;
 	}
 
 	public int getCommentId() {
@@ -64,5 +68,13 @@ public class BlogComment {
 
 	public void setPostedDate(Date postedDate) {
 		this.postedDate = postedDate;
+	}
+
+	public Blog getBlog() {
+		return blog;
+	}
+
+	public void setBlog(Blog blog) {
+		this.blog = blog;
 	}
 }
