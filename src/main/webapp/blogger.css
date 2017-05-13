@@ -1,4 +1,4 @@
-#loginScreen,#profileUpdateScreen, #signUpScreen ,#homeScreen,#newBlogForm,#newPostForm,#blogDetails{
+#loginScreen,#profileUpdateScreen, #signUpScreen ,#newBlogForm,#newBlogScreen,#loggedInOptions{
 	display: none;
 }
 H1 { text-align: center }
@@ -23,12 +23,16 @@ H1 { text-align: center }
 }
 #postDetails{
 	margin-left:15%;
-	height : 250px;
-	overflow-y: scroll;
+	height : 1000px;
 }
-#newBlogForm,#newPostForm {
+#newBlogForm,#newBlogScreen {
 	margin-left: 20%;
 	margin-top: 3%;
+}
+
+#custom-search-input,#homeOptions_default{
+	
+	margin-top: 7%;
 }
 #custom-search-input .glyphicon-search{
     font-size: 15px;

@@ -3,7 +3,7 @@ package com.cisco.cmadt9blogger.api;
 import java.util.List;
 
 public interface Blogger {
-	public void signupNewUser(User user) throws InvalidUserDetailsException, 
+	public String signupNewUser(User user) throws InvalidUserDetailsException, 
 	UserAlreadyExistsException, BloggerException;
 	public String loginUser(String userId, String password) throws InvalidCredentialsException,BloggerException;
 	public User getUserDetails(String userId) throws UserNotFoundException,BloggerException;

@@ -15,7 +15,9 @@ public class JPAUserDAO extends JPABloggerDAO implements UserDAO{
 	public void createUser(User user) {
 		EntityManager em = factory.createEntityManager();
 		em.getTransaction().begin();
+		System.out.println("JPAUserDAO createUser");
 		em.persist(user);
+		System.out.println("JPAUserDAO createUser persisted");
 		em.getTransaction().commit();
 		em.close();
 		

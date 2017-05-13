@@ -31,13 +31,16 @@ public class T9Blogger implements Blogger{
 	private BlogDAO blogDao = new JPABlogDAO();
 	private CommentDAO commentDAO = new JPACommentDAO();
 
-	public void signupNewUser(User user)
+	public String signupNewUser(User user)
 			throws InvalidUserDetailsException, UserAlreadyExistsException, BloggerException {
 		if (user == null)
 			throw new InvalidUserDetailsException();
 		if (userDao.readUser(user.getUserId()) != null)
 			throw new UserAlreadyExistsException();
+		System.out.println("T9Blogger user");
 		userDao.createUser(user);
+		String token = issueToken(user.getUserId());
+		return token;
 
 	}
 

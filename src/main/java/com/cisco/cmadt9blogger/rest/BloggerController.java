@@ -26,6 +26,8 @@ import com.cisco.cmadt9blogger.api.User;
 import com.cisco.cmadt9blogger.service.T9Blogger;
 
 
+
+
 @Path("/blogger")
 public class BloggerController {
 
@@ -39,8 +41,16 @@ public class BloggerController {
 	@Consumes(MediaType.APPLICATION_JSON) 
 	public Response signupNewUser(
 			User user) {
-		blogger.signupNewUser(user);
-		return Response.ok().build();
+		System.out.println("Adding user rest");
+		System.out.println("REST Userid :"+user.getUserId());
+		System.out.println("REST password :"+user.getPassword());
+		System.out.println("REST Firstname :"+user.getFirstName());
+		System.out.println("REST Secondname :"+user.getLastName());
+		System.out.println("REST Nickname :"+user.getNickName());
+		String token = blogger.signupNewUser(user);
+		System.out.println("REST sign up token :"+token);
+		//return Response.ok().build();
+		return Response.ok().header(AUTHORIZATION, "Bearer " + token).build();
 	}
 	
 	@PUT
@@ -52,11 +62,13 @@ public class BloggerController {
 		user.setUserId(userId);
 		blogger.updateUserProfile(user);
 		return Response.ok().build();
+		
 	}
 	
 	@GET
 	@Path("/user/{userId}")
 	@Produces(MediaType.APPLICATION_JSON) 
+	@RequireJWTToken
 	//TODO Check password
 	public Response getUserDetails(
 			@PathParam("userId")String userId) {
