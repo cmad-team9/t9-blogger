@@ -36,7 +36,7 @@ public class JPACommentDAO extends JPABloggerDAO implements CommentDAO{
 		//Query query = em.createQuery("SELECT e FROM Blog e");
 		//FIXME
 		int pageNumber = 1;
-		int pageSize = 1;
+		int pageSize = 10;
 		
 		final CriteriaBuilder builder = em.getCriteriaBuilder();
 		final CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
@@ -46,8 +46,9 @@ public class JPACommentDAO extends JPABloggerDAO implements CommentDAO{
 		
 		CriteriaQuery<BlogComment> criteriaQuery = builder.createQuery(BlogComment.class);
 		Root<BlogComment> from = criteriaQuery.from(BlogComment.class);
+		
 		CriteriaQuery<BlogComment> select = criteriaQuery.select(from);
-				 
+		select.where(builder.equal(from.get("blog"),blogId));	 
 		TypedQuery<BlogComment> typedQuery = em.createQuery(select);
 		while (pageNumber <= count.intValue()) {
 			typedQuery.setFirstResult(pageNumber - 1);
@@ -56,10 +57,10 @@ public class JPACommentDAO extends JPABloggerDAO implements CommentDAO{
 			pageNumber += pageSize;
 		}
 		
-		//List<Blog> blogList = query.getResultList();
+		List<BlogComment> commentList = typedQuery.getResultList();
 		em.getTransaction().commit();
 		em.close();
-		return null;
+		return commentList;
 	}
 
 }

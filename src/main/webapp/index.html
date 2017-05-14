@@ -74,7 +74,7 @@
 							<p id ="post2Content">
 							POST 2 CONTENT
 						<p>
-						<a href="#" style="font-size: 10px;color:blue;"id = "commentOptionspost1"> COMMENTS</a>
+						<a href="#" style="font-size: 10px;color:blue;"id = "commentOptionspost2"> COMMENTS</a>
 					</div>
 					<br>
 					<br>
@@ -149,7 +149,48 @@
 			<button type="submit" id="submitNewBlogbtn">Submit</button>	
 		</div>
 		
+		<div id = "blogAndCommentsScreen">
+			<div id = "selectedPost">
+				<a href="#" id ="selectedHeading" data-toggle="modal" data-target="#selectedDescriptionModal">SELECTED POST TITLE</a>
+				<p id ="selectedContent">
+					SELECTED POST CONTENT
+				<p>
+			</div>
+			<div id = "commentDetails">
+				<div class="form-group">
+					<label>Add a comment</label>
+					<textarea rows="3" class="form-control" id="commentInput" placeholder="Your Comment"></textarea>
+				</div>		  
+				<button type="submit" id="submitCommentbtn">Post Comment</button>
+				
+				<div id = "comment0">
+					<p id ="comment0Content">
+						COMMENT 0 CONTENT
+					<p>
+					<p style="font-size: 10px;color:blue;margin-left:50%" id="comment0user">commenter for comment 0</p>
+				</div>
+				<br>
+				<div id = "comment1">
+					<p id ="comment1Content">
+						COMMENT 1 CONTENT
+					<p>
+					<p style="font-size: 10px;color:blue;margin-left:50%" id="comment1user">commenter for comment 1</p>
+				</div>
+				<br>
+				<div id = "comment2">
+					<p id ="comment2Content">
+						COMMENT 2 CONTENT
+					<p>
+					<p style="font-size: 10px;color:blue;margin-left:50%" id="comment2user">commenter for comment 2</p>
+				</div>
+				<br>
+				
+			</div>
+		</div>
+			
 	</div>
+	
+	
 	<script src="blogger.js"></script>
 </body>
 </html>

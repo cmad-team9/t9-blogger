@@ -146,8 +146,9 @@ public class BloggerController {
 	@Produces(MediaType.APPLICATION_JSON) 
 	public Response getAllComments(@PathParam("blogId")int blogId) {
 		System.out.println("*************All Comments REST");
-		List<BlogComment> blogList = blogger.getAllComments(blogId);
-		return Response.ok().entity(blogList).build();
+		//List<BlogComment> blogList = blogger.getAllComments(blogId);
+		 GenericEntity<List<BlogComment>> commentList = new GenericEntity<List<BlogComment>>(blogger.getAllComments(blogId)) {};
+		return Response.ok().entity(commentList).build();
 	}
 
 	@GET

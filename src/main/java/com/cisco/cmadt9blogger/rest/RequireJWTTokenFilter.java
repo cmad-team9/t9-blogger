@@ -28,8 +28,9 @@ public class RequireJWTTokenFilter implements ContainerRequestFilter {
 		// Get the HTTP Authorization header from the request
         String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
      // Extract the token from the HTTP Authorization header
-        System.out.println("authorizationHeader :"+authorizationHeader);
-        if(authorizationHeader != null) {
+        System.out.println("filter authorizationHeader :"+authorizationHeader);
+        System.out.println("filter authorizationHeader len:"+authorizationHeader.length());
+        if(authorizationHeader != null && !authorizationHeader.equals("null")) {
         	String token = authorizationHeader.substring("Bearer".length()).trim();
         	System.out.println("RECIEVED TOKEN :"+token);        	
         	try {

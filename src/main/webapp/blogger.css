@@ -1,4 +1,4 @@
-#loginScreen,#profileUpdateScreen, #signUpScreen ,#newBlogForm,#newBlogScreen,#loggedInOptions{
+#loginScreen,#profileUpdateScreen, #signUpScreen ,#newBlogForm,#newBlogScreen,#loggedInOptions,#blogAndCommentsScreen{
 	display: none;
 }
 H1 { text-align: center }

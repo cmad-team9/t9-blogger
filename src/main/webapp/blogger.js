@@ -40,6 +40,42 @@ function fetchAllBlogs(){
 				console.log("Blog Title:"+data[i].title);
 				$("#post"+i+"Content").text(data[i].description);
 				console.log("Blog Content:"+data[i].description);
+				console.log("Blog id:"+data[i].blogId);
+				$("#commentOptionspost"+i).data("blogData",data[i]);
+				//$("#commentOptionspost"+i).attr("blogTitle",data[i].title);
+				//$("#commentOptionspost"+i).attr("blogDescription",data[i].blogDescription);
+				console.log("Comment data :"+($("#commentOptionspost"+i).data("blogData")));
+			}
+			
+		},
+		error : function( jqXHR,textStatus, errorThrown ) {
+			console.log("error callback :"+jqXHR);
+			console.log("error callback:"+textStatus);
+			console.log("error callback:"+errorThrown);
+		},
+		 complete : function( jqXHR, textStatus ) {
+			console.log("complete callback"); 
+		}
+	});
+} 
+
+function fetchBlogComments(blogId){
+	$.ajax({
+		url : 'rest/blogger/blogs/'+blogId+'/comments',
+		type : 'get',
+		contentType: "application/json; charset=utf-8",
+		dataType : 'json', 
+		success : function(data,textStatus, jqXHR) { 
+			console.log("success callback");
+			console.log("Blog data:"+data);
+			for(i = 0;i < data.length;i++){ 
+				console.log("i:"+i);
+				$("#comment"+i+"Content").text(data[i].comment);
+				console.log("Comment:"+data[i].comment);
+				$("#comment"+i+"user").text(data[i].commentor.userId);
+				console.log("commentor:"+data[i].commentor.userId);
+				console.log("Blog id:"+data[i].blogId);
+
 			}
 			
 		},
@@ -65,11 +101,40 @@ function showNewBlogScreen(makeVisible){
 	}
 }
 
+function showBlogAndCommentsScreen(makeVisible,blogData) {
+	console.log("showBlogAndCommentsScreen enter");
+	if(makeVisible) {
+		$("#homeScreenBody").hide();
+		console.log("showing showBlogAndCommentsScreen");
+		//console.log("Inside showBlogAndCommentsScreen attr:"+$(this).attr("blogData"));
+		console.log("blogData.title :"+blogData.title);
+		console.log("blogData.description :"+blogData.description);
+		$("#selectedHeading").text(blogData.title);
+		$("#selectedContent").text(blogData.description);
+		fetchBlogComments(blogData.blogId);
+		
+		$("#commentInput").data("blogId",blogData.blogId);
+		$("#blogAndCommentsScreen").show();
+	} else {
+		$("#blogAndCommentsScreen").hide();
+	}
+	
+}
+
 
 $(document).ready(function() {
-	alert("I am an alert box!");
+	//alert("I am an alert box!");
 	console.log("**Document Ready**");
 	showHSLoggedOutOptions(true);
+	//$('#commentOptionspost0').click(showBlogAndCommentsScreen(true));
+	$("#commentOptionspost0,#commentOptionspost1,#commentOptionspost2").click(function(e) {
+		var blogData = $(this).data("blogData");
+		console.log("Inside click attr blogData:"+blogData);
+		console.log("Inside click attr blogData.title:"+blogData.title);
+		$("#loginScreen").hide();
+		showBlogAndCommentsScreen(true,blogData);
+	});
+		
 	$("#loginBtn").click(function(e) {
 		showHSLoggedInOptions(false);
 		showHSLoggedOutOptions(false);
@@ -284,7 +349,37 @@ $(document).ready(function() {
 		});
 	});
 	
-	
+	$("#submitCommentbtn").click(function() {
+		var blogId = $("#commentInput").data("blogId");
+		console.log(" commentInput blogId:"+blogId);
+		var commentDescription = $("#commentInput").val();
+		console.log("commentDescription:"+commentDescription);
+		
+		
+		var comment = {
+			"comment" : commentDescription
+			
+		};
+		$.ajax({
+			url : 'rest/blogger/blogs/'+blogId+'/comments',
+			type : 'post',
+			contentType: "application/json; charset=utf-8",
+			headers: {"AUTHORIZATION": window.sessionStorage.getItem('accessToken')},
+			success : function(data,textStatus, jqXHR) { 
+				console.log("success callback");
+				
+			},
+			error : function( jqXHR,textStatus, errorThrown ) {
+				console.log("error callback :"+jqXHR);
+				console.log("error callback:"+textStatus);
+				console.log("error callback:"+errorThrown);
+			},
+			 complete : function( jqXHR, textStatus ) {
+				console.log("complete callback"); 
+			},
+			data : JSON.stringify(comment)
+		});
+	});
 	
 	
 	
