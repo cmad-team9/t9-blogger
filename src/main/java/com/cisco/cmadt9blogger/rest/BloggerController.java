@@ -15,6 +15,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -99,6 +100,8 @@ public class BloggerController {
 		System.out.println("addBlog userId :"+userId);
 		User user = blogger.getUserDetails(userId);
 		System.out.println("addBlog user :"+user);
+		System.out.println("addBlog blog title :"+blog.getTitle());
+		System.out.println("addBlog blog description :"+blog.getDescription());
 		blog.setUser(user);
 		blogger.addBlog(blog);
 		return Response.ok().entity(blog).build();
@@ -118,8 +121,9 @@ public class BloggerController {
 	@Path("/blogs")
 	@Produces(MediaType.APPLICATION_JSON) 
 	public Response getAllBlogs() {
-		System.out.println("*************All Blogs REST");
-		List<Blog> blogList = blogger.getAllBlogs();
+		System.out.println("*************All Blogs REST__");
+		//List<Blog> blogList = blogger.getAllBlogs();
+		 GenericEntity<List<Blog>> blogList = new GenericEntity<List<Blog>>(blogger.getAllBlogs()) {};
 		return Response.ok().entity(blogList).build();
 	}
 	

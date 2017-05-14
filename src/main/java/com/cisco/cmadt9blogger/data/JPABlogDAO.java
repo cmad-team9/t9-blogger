@@ -42,7 +42,7 @@ public class JPABlogDAO extends JPABloggerDAO implements BlogDAO {
 		//Query query = em.createQuery("SELECT e FROM Blog e");
 		//FIXME
 		int pageNumber = 1;
-		int pageSize = 1;
+		int pageSize = 10;
 		
 		final CriteriaBuilder builder = em.getCriteriaBuilder();
 		final CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
@@ -62,10 +62,10 @@ public class JPABlogDAO extends JPABloggerDAO implements BlogDAO {
 			pageNumber += pageSize;
 		}
 		
-		//List<Blog> blogList = query.getResultList();
+		List<Blog> blogList = typedQuery.getResultList();
 		em.getTransaction().commit();
 		em.close();
-		return null;
+		return blogList;
 	}
 
 }

@@ -1,5 +1,75 @@
-$(document).ready(function() {
+function showHSLoggedInOptions(makeVisible){
+	if(makeVisible) {
+		$("#custom-search-input").show();
+		$("#loggedInOptions").show();
+		$("#homeScreenBody").show();
+	} else {
+		$("#custom-search-input").hide();
+		$("#loggedInOptions").hide();
+		$("#homeScreenBody").hide();
+	}
+}
 	
+function showHSLoggedOutOptions(makeVisible) {
+	if(makeVisible) {
+		console.log("**showHSLoggedOutOptions**");
+		$("#custom-search-input").show();
+		$("#homeOptions_default").show();
+		$("#homeScreenBody").show();
+		fetchAllBlogs();
+	} else {
+		$("#custom-search-input").hide();
+		$("#homeOptions_default").hide();
+		$("#homeScreenBody").hide();
+	}
+	
+}
+	
+function fetchAllBlogs(){
+	$.ajax({
+		url : 'rest/blogger/blogs',
+		type : 'get',
+		contentType: "application/json; charset=utf-8",
+		dataType : 'json', 
+		success : function(data,textStatus, jqXHR) { 
+			console.log("success callback");
+			console.log("Blog data:"+data);
+			for(i = 0;i < data.length;i++){ 
+				console.log("i:"+i);
+				$("#post"+i+"Heading").text(data[i].title);
+				console.log("Blog Title:"+data[i].title);
+				$("#post"+i+"Content").text(data[i].description);
+				console.log("Blog Content:"+data[i].description);
+			}
+			
+		},
+		error : function( jqXHR,textStatus, errorThrown ) {
+			console.log("error callback :"+jqXHR);
+			console.log("error callback:"+textStatus);
+			console.log("error callback:"+errorThrown);
+		},
+		 complete : function( jqXHR, textStatus ) {
+			console.log("complete callback"); 
+		}
+	});
+} 
+function showNewBlogScreen(makeVisible){
+	if(makeVisible) {
+		$("#loginScreen").hide();
+		$("#custom-search-input").hide();
+		$("#loggedInOptions").hide();
+		$("#homeScreenBody").hide();
+		$("#newBlogScreen").show();
+	} else {
+		$("#newBlogScreen").hide();
+	}
+}
+
+
+$(document).ready(function() {
+	alert("I am an alert box!");
+	console.log("**Document Ready**");
+	showHSLoggedOutOptions(true);
 	$("#loginBtn").click(function(e) {
 		showHSLoggedInOptions(false);
 		showHSLoggedOutOptions(false);
@@ -174,41 +244,49 @@ $(document).ready(function() {
 		//$("#newBlogForm").show();
 	});
 	
-	function showHSLoggedInOptions(makeVisible){
-		if(makeVisible) {
-			$("#custom-search-input").show();
-			$("#loggedInOptions").show();
-			$("#homeScreenBody").show();
-		} else {
-			$("#custom-search-input").hide();
-			$("#loggedInOptions").hide();
-			$("#homeScreenBody").hide();
-		}
-	}
+	$("#newBlogBtn_loggedIn").click(function(e) {
+		showHSLoggedInOptions(false);
+		showNewBlogScreen(true);
+	});
 	
-	function showHSLoggedOutOptions(makeVisible) {
-		if(makeVisible) {
-			$("#custom-search-input").show();
-			$("#homeOptions_default").show();
-			$("#homeScreenBody").show();
-		} else {
-			$("#custom-search-input").hide();
-			$("#homeOptions_default").hide();
-			$("#homeScreenBody").hide();
-		}
+	$("#submitNewBlogbtn").click(function() {
+		showNewBlogScreen(false);
+
+		var blogTitle = $("#newBlogTitle").val();
+		console.log("newBlogTitle:"+blogTitle);
+		var blogDescription = $("#blogDescriptionIInput").val();
+		console.log("blogDescription:"+blogDescription);
 		
-	}
+		
+		var blog = {
+			"title" : blogTitle,
+			"description" : blogDescription
+			
+		};
+		$.ajax({
+			url : 'rest/blogger/blogs',
+			type : 'post',
+			contentType: "application/json; charset=utf-8",
+			headers: {"AUTHORIZATION": window.sessionStorage.getItem('accessToken')},
+			success : function(data,textStatus, jqXHR) { 
+				console.log("success callback");
+				showHSLoggedInOptions(true);
+			},
+			error : function( jqXHR,textStatus, errorThrown ) {
+				console.log("error callback :"+jqXHR);
+				console.log("error callback:"+textStatus);
+				console.log("error callback:"+errorThrown);
+			},
+			 complete : function( jqXHR, textStatus ) {
+				console.log("complete callback"); 
+			},
+			data : JSON.stringify(blog)
+		});
+	});
 	
-	function showNewBlogScreen(makeVisible){
-		if(makeVisible) {
-			$("#custom-search-input").hide();
-			$("#loggedInOptions").hide();
-			$("#homeScreenBody").hide();
-			$("#newBlogScreen").show();
-		} else {
-			$("#newBlogScreen").hide();
-		}
-	}
+	
+	
+	
 	
 	
 	$("#findLink").click(function(e) {
@@ -229,3 +307,4 @@ $(document).ready(function() {
 			}		});
 	});
 });
+

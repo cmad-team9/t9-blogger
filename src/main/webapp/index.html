@@ -9,11 +9,11 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="jquery-2.1.3.js"></script>
-<script src="blogger.js"></script>
+<!-- <script src="blogger.js"></script> -->
 </head>
 <body>
 	<div class="container-fluid">
-		<h1>T9Blogger V0.2</h1>
+		<h1>T9Blogger V0.3</h1>
 		<hr />
 		<div id='homeScreen'>
 			<div class="row">
@@ -49,38 +49,35 @@
 			<div id = "homeScreenBody">
 				<h3 align="center">Recent Posts</h3>
 				<div id = "postDetails">
+					<div id = "post0">
+						<a href="#" id ="post0Heading" data-toggle="modal" data-target="#post0DescriptionModal">POST 0 TITLE</a>
+						<p id ="post0Content">
+							POST 0 CONTENT
+						<p>
+						<a href="#" style="font-size: 10px;color:blue;"id = "commentOptionspost0"> COMMENTS</a>
+						<!--	<a href="#" style="font-size: 10px; margin-left:50%;"id="addComment"> Add Comment </a> -->
+						
+					</div>
+					<br>
+					<br>
 					<div id = "post1">
-						<a href="#" id ="post1Heading" data-toggle="modal" data-target="#post1DescriptionModal">Doodhsagar – India’s second tallest waterfall - every trekker’s dream</a>
+						<a href="#" id ="post1Heading">POST 1 TITLE</a>
 						<p id ="post1Content">
-							We are a group of friends who love trekking. All kinds – jungle trails, hillocks, moderate rock climbing.
-							And it had been quite sometime since we last did something like that. The last few months had been pretty 
-							hectic for all of us, workwise. We hadn’t got a chance to go out anywhere to refresh our minds!
-							One morning, a friend forwarded a mail which had these beautiful snaps of the Doodhsagar Falls. 
-							That was enough to light our fire within. We started Googling for info regarding its location...
+							POST 1 CONTENT
 						<p>
+						<a href="#" style="font-size: 10px;color:blue;"id = "commentOptionspost1"> COMMENTS</a>
 					</div>
+					<br>
+					<br>
 					<div id = "post2">
-						<a href="#" id ="post2Heading">A trip down Mysore's (memory) lanes</a>
-						<p id ="post2Content">
-							In what was our first "trip" per se since our move back to India, we visited Mysore.
-							We wanted to take Subhash's parents somewhere because ever since they have come, 
-							we haven't gone out anywhere.2001 was the last time I visited this sleepy town. 
-							And in 2008, I find, that its not so sleepy anymore. I remember as kids, we used to 
-							hate going Mysore because it was the most boring place on earth. There is nothing we could 
-							do except going to the same Mysore Palace and the same KR Sagar and the same ...
-						<p>
-					</div>
-					<div id = "post3">
-						<a href="#" id ="post3Heading">Bus ride nostalgia</a>
+						<a href="#" id ="post2Heading">POST 2 TITLE</a>
 							<p id ="post2Content">
-							I was walking towards the bus stop back from work today when I kept repeatedly thinking 
-							of my very good friend K. We were in engineering together and consequently she and I have 
-							shared bus rides for four years. And they were a progression of laziness;) 
-							And also a very very extremely varied experience. From using our drafters as missiles during 
-							ragging in the bus to hijack then, and having Y slap a guy for saying something nasty to getting 
-							off running buses and last minute exam preparations...
+							POST 2 CONTENT
 						<p>
+						<a href="#" style="font-size: 10px;color:blue;"id = "commentOptionspost1"> COMMENTS</a>
 					</div>
+					<br>
+					<br>
 				</div>
 				<div id = "pagingOptions">
 					<a href="#" id="first"> First | </a>
@@ -139,18 +136,20 @@
 		</div>
 	
 		<div id = "newBlogScreen">
-			<div>
+			<h3>New Blog</h3>
+			<div class="form-group">
 				<label>Blog title</label>
-				<input type="text" id="newBlogTitle" placeholder="Blog Title">
+				<input type="text" class="form-control" id="newBlogTitle" placeholder="Blog Title">
 			</div>
 					   
-			<div>
+			<div class="form-group">
 				<label>Description</label>
-				<textarea rows="10" id="blogDescriptionIInput" placeholder="Blog Description"></textarea>
+				<textarea rows="10" class="form-control" id="blogDescriptionIInput" placeholder="Blog Description"></textarea>
 			</div>		  
-			<button type="submit" class="submitNewBlogbtn">Submit</button>	
+			<button type="submit" id="submitNewBlogbtn">Submit</button>	
 		</div>
 		
 	</div>
+	<script src="blogger.js"></script>
 </body>
 </html>
