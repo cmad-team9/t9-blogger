@@ -3,18 +3,21 @@ package com.cisco.cmadt9blogger.api;
 import java.util.List;
 
 public interface Blogger {
-	public String signupNewUser(User user) throws InvalidUserDetailsException, 
+	String signupNewUser(User user) throws InvalidUserDetailsException, 
 	UserAlreadyExistsException, BloggerException;
-	public String loginUser(String userId, String password) throws InvalidCredentialsException,BloggerException;
-	public User getUserDetails(String userId) throws UserNotFoundException,BloggerException;
+	String loginUser(String userId, String password) throws InvalidCredentialsException,BloggerException;
+	User getUserDetails(String userId) throws UserNotFoundException,BloggerException;
 //	public void logoutUser(User user) throws BloggerException;
-	public void updateUserProfile(User user) throws InvalidUserDetailsException,BloggerException;
-	public void addBlog(Blog blog) throws InvalidBlogException, 
+	void updateUserProfile(User user) throws InvalidUserDetailsException,BloggerException;
+	void addBlog(Blog blog) throws InvalidBlogException, 
 	DuplicateBlogException, BloggerException;
 //	public List<Blog> findBlogs(String title) throws BlogNotFoundException, BloggerException;
-	public List<Blog> getAllBlogs() throws BlogNotFoundException,BloggerException; 
-	public Blog getBlog(int blogId/*,User user*/) throws BlogNotFoundException,BloggerException;
-	public void addComment(BlogComment comment) throws BloggerException;
-	public List<BlogComment> getAllComments(int blogId) throws BlogNotFoundException, BloggerException;
+	List<Blog> getAllBlogs(int offset,int pageSize) throws BlogNotFoundException,BloggerException; 
+	Blog getBlog(int blogId/*,User user*/) throws BlogNotFoundException,BloggerException;
+	void addComment(BlogComment comment) throws BloggerException;
+	List<BlogComment> getAllComments(int blogId) throws BlogNotFoundException, BloggerException;
 
+	long getBlogCount() throws BloggerException;
+	long getCommentCount(int blogId) throws BloggerException;
+	
 }

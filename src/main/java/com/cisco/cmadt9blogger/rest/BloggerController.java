@@ -1,10 +1,13 @@
 package com.cisco.cmadt9blogger.rest;
 
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static javax.ws.rs.core.HttpHeaders.LINK;
+
 
 import java.util.List;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -18,6 +21,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.cisco.cmadt9blogger.api.Blog;
@@ -120,11 +124,20 @@ public class BloggerController {
 	@GET
 	@Path("/blogs")
 	@Produces(MediaType.APPLICATION_JSON) 
-	public Response getAllBlogs() {
+	public Response getAllBlogs(@QueryParam("offset")@DefaultValue("0") int offset,
+			@QueryParam("pageSize")@DefaultValue("5")int pageSize , @Context UriInfo uriInfo) {
 		System.out.println("*************All Blogs REST__");
 		//List<Blog> blogList = blogger.getAllBlogs();
-		 GenericEntity<List<Blog>> blogList = new GenericEntity<List<Blog>>(blogger.getAllBlogs()) {};
-		return Response.ok().entity(blogList).build();
+		System.out.println("offset:"+offset);
+		System.out.println("pageSize:"+pageSize);
+		System.out.println("uriInfo:"+uriInfo);
+		System.out.println("uriInfo rri:"+uriInfo.getRequestUri());
+		UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
+		 GenericEntity<List<Blog>> blogList = new GenericEntity<List<Blog>>(blogger.getAllBlogs(offset,pageSize)) {};
+		 long totalCount = blogger.getBlogCount();
+		 System.out.println("totalCount:"+totalCount);
+		 System.out.println("link Header :"+PaginationUtil.getLinkHeaders(uriBuilder, offset, totalCount, pageSize));
+		return Response.ok().entity(blogList).header(LINK, PaginationUtil.getLinkHeaders(uriBuilder, offset, totalCount, pageSize)).build();
 	}
 	
 	@POST

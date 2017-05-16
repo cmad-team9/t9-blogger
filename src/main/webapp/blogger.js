@@ -30,7 +30,8 @@ function fetchAllBlogs(){
 		url : 'rest/blogger/blogs',
 		type : 'get',
 		contentType: "application/json; charset=utf-8",
-		dataType : 'json', 
+		dataType : 'json',
+		data : {"offset": "0","pageSize": "2"},
 		success : function(data,textStatus, jqXHR) { 
 			console.log("success callback");
 			console.log("Blog data:"+data);
@@ -45,7 +46,12 @@ function fetchAllBlogs(){
 				//$("#commentOptionspost"+i).attr("blogTitle",data[i].title);
 				//$("#commentOptionspost"+i).attr("blogDescription",data[i].blogDescription);
 				console.log("Comment data :"+($("#commentOptionspost"+i).data("blogData")));
+				
+				
 			}
+			configurePagingOptions(jqXHR.getResponseHeader("LINK"));
+			console.log("LinkHeader at client :"+jqXHR.getResponseHeader("LINK"));
+			
 			
 		},
 		error : function( jqXHR,textStatus, errorThrown ) {
@@ -58,6 +64,52 @@ function fetchAllBlogs(){
 		}
 	});
 } 
+
+function configurePagingOptions(linkheader) {
+	var parsedLinks = parse_link_header(linkheader); 
+	console.log("Parsing linkheader :"+parsedLinks);
+	for (var key in parsedLinks) {
+		console.log("**Enterng loop:"+key);
+	 // if (parsedLinks.hasOwnProperty(key))
+		var keyToMatch = key.toLowerCase();
+		console.log("keyToMatch:"+keyToMatch);
+		console.log("if check:"+(keyToMatch === "next"));
+		$("#next").hide();
+		$("#next").removeData("targetUrl");
+		$("#prev").hide();
+		$("#prev").removeData("targetUrl");
+		$("#first").hide();
+		$("#first").removeData("targetUrl");
+		$("#last").hide();
+		$("#last").removeData("targetUrl");
+		switch(keyToMatch) {
+			case "next":
+				console.log("**entering next");
+				$("#next").show();
+				$("#next").data("targetUrl",parsedLinks[key]);
+				break;
+			case "prev":
+				console.log("**entering prev");
+				$("#prev").show();
+				console.log("**prev shown");
+				$("#prev").data("targetUrl",parsedLinks[key]);
+				break;
+			case "first":
+				console.log("**entering first");
+				$("#first").show();
+				$("#first").data("targetUrl",parsedLinks[key]);
+				break;
+			case "last":
+				console.log("**entering last");
+				$("#last").show();
+				$("#last").data("targetUrl",parsedLinks[key]);
+				break;	
+			default:
+				break;
+		}
+		console.log("parsedLink:"+parsedLinks[key]);
+	}
+}
 
 function fetchBlogComments(blogId){
 	$.ajax({
@@ -75,7 +127,7 @@ function fetchBlogComments(blogId){
 				$("#comment"+i+"user").text(data[i].commentor.userId);
 				console.log("commentor:"+data[i].commentor.userId);
 				console.log("Blog id:"+data[i].blogId);
-
+				
 			}
 			
 		},
@@ -89,6 +141,28 @@ function fetchBlogComments(blogId){
 		}
 	});
 } 
+
+function parse_link_header(header) {
+	if (header.length == 0) {
+		throw new Error("input must not be of zero length");
+	}
+	// Split parts by comma
+	var parts = header.split(',');
+	var links = {};
+	// Parse each part into a named link
+	for(i=0;i<parts.length;i++)
+	{
+		var section = parts[i].split(';');
+		if (section.length != 2) {
+			throw new Error("section could not be split on ';'");
+		}
+		var url = section[0].replace(/<(.*)>/, '$1').trim();
+		var name = section[1].replace(/rel="(.*)"/, '$1').trim();
+		links[name] = url;
+	}
+	return links;
+}
+
 function showNewBlogScreen(makeVisible){
 	if(makeVisible) {
 		$("#loginScreen").hide();
@@ -378,6 +452,45 @@ $(document).ready(function() {
 				console.log("complete callback"); 
 			},
 			data : JSON.stringify(comment)
+		});
+	});
+	
+	
+	$("#next,#prev,#first,#last").click(function() {
+		var targetUrl = $(this).data("targetUrl");
+		console.log("targetUrl in pagingOptions click :"+targetUrl);
+		$.ajax({
+			url : targetUrl,
+			type : 'get',
+			contentType: "application/json; charset=utf-8",
+			dataType : 'json', 
+			success : function(data,textStatus, jqXHR) { 
+				console.log("next success callback");
+				for(i = 0;i < data.length;i++){ 
+					console.log("i:"+i);
+					$("#post"+i+"Heading").text(data[i].title);
+					console.log("Blog Title:"+data[i].title);
+					$("#post"+i+"Content").text(data[i].description);
+					console.log("Blog Content:"+data[i].description);
+					console.log("Blog id:"+data[i].blogId);
+					$("#commentOptionspost"+i).data("blogData",data[i]);
+					//$("#commentOptionspost"+i).attr("blogTitle",data[i].title);
+					//$("#commentOptionspost"+i).attr("blogDescription",data[i].blogDescription);
+					console.log("Comment data :"+($("#commentOptionspost"+i).data("blogData")));
+					console.log("Comment data :"+($("#commentOptionspost"+i).data("blogData")));
+				}
+				configurePagingOptions(jqXHR.getResponseHeader("LINK"));
+				
+			},
+			error : function( jqXHR,textStatus, errorThrown ) {
+				console.log("error callback :"+jqXHR);
+				console.log("error callback:"+textStatus);
+				console.log("error callback:"+errorThrown);
+			},
+			 complete : function( jqXHR, textStatus ) {
+				console.log("complete callback"); 
+			}
+			
 		});
 	});
 	

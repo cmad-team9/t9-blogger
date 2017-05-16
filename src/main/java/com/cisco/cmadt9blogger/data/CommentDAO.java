@@ -8,4 +8,5 @@ public interface CommentDAO {
 	void createComment(BlogComment comment);
 	BlogComment readComment(int commentId);
 	List<BlogComment> getAllComments(int blogId);
+	int getCommentCount();
 }

@@ -82,12 +82,14 @@ public class T9Blogger implements Blogger{
 	}
 
 	@Override
-	public List<Blog> getAllBlogs() throws BlogNotFoundException, BloggerException {
-		List<Blog> blogList = blogDao.getAllBlogs();
+	public List<Blog> getAllBlogs(int offset,int pageSize) throws BlogNotFoundException, BloggerException {
+		List<Blog> blogList = blogDao.getAllBlogs(offset,pageSize);
 		if (blogList == null || blogList.isEmpty())
 			throw new BlogNotFoundException();
 		return blogList;
 	}
+	
+	
 
 	@Override
 	public void updateUserProfile(User user) throws InvalidUserDetailsException, BloggerException {
@@ -149,5 +151,17 @@ public class T9Blogger implements Blogger{
 		if (commentList == null || commentList.isEmpty())
 			throw new BlogNotFoundException();
 		return commentList;
+	}
+
+	@Override
+	public long getBlogCount() throws BloggerException {
+		// TODO 
+		return blogDao.getBlogCount();
+	}
+
+	@Override
+	public long getCommentCount(int blogId) throws BloggerException {
+		// TODO Auto-generated method stub
+		return commentDAO.getCommentCount();
 	}
 }

@@ -63,4 +63,10 @@ public class JPACommentDAO extends JPABloggerDAO implements CommentDAO{
 		return commentList;
 	}
 
+	@Override
+	public int getCommentCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

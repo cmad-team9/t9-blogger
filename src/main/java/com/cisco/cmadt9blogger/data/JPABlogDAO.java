@@ -35,37 +35,57 @@ public class JPABlogDAO extends JPABloggerDAO implements BlogDAO {
 	}
 	
 	@Override
-	public List<Blog> getAllBlogs() {
+	public List<Blog> getAllBlogs(int offset,int pageSize) {
 		EntityManager em = factory.createEntityManager();
 		em.getTransaction().begin();
 		//Check the working..Need to implement paging
 		//Query query = em.createQuery("SELECT e FROM Blog e");
 		//FIXME
-		int pageNumber = 1;
-		int pageSize = 10;
+//		int pageNumber = 1;
+//		int pageSize = 10;
 		
 		final CriteriaBuilder builder = em.getCriteriaBuilder();
-		final CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
-		countQuery.select(builder.count(countQuery.from(Blog.class)));
-		final Long count = em.createQuery(countQuery).getSingleResult();
-		System.out.println("Count:"+count);
+		/***************************************/
+		//final CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
+		//countQuery.select(builder.count(countQuery.from(Blog.class)));
+		//final Long count = em.createQuery(countQuery).getSingleResult();
+		//System.out.println("Count:"+count);
+		/***************************************/
 		
 		CriteriaQuery<Blog> criteriaQuery = builder.createQuery(Blog.class);
 		Root<Blog> from = criteriaQuery.from(Blog.class);
 		CriteriaQuery<Blog> select = criteriaQuery.select(from);
 				 
 		TypedQuery<Blog> typedQuery = em.createQuery(select);
-		while (pageNumber <= count.intValue()) {
-			typedQuery.setFirstResult(pageNumber - 1);
-			typedQuery.setMaxResults(pageSize);
-			System.out.println("Current page: " + typedQuery.getResultList());
-			pageNumber += pageSize;
+//		while (pageNumber <= count.intValue()) {
+//			typedQuery.setFirstResult(pageNumber - 1);
+//			typedQuery.setMaxResults(pageSize);
+//			System.out.println("Current page: " + typedQuery.getResultList());
+//			pageNumber += pageSize;
+//		}
+		if(offset != 0){
+			offset = offset + pageSize -1;
 		}
-		
+		typedQuery.setFirstResult(offset);
+		typedQuery.setMaxResults(pageSize);
+		System.out.println("Current page: " + typedQuery.getResultList());
 		List<Blog> blogList = typedQuery.getResultList();
 		em.getTransaction().commit();
 		em.close();
 		return blogList;
+	}
+
+	@Override
+	public long getBlogCount() {
+		EntityManager em = factory.createEntityManager();
+		em.getTransaction().begin();
+		final CriteriaBuilder builder = em.getCriteriaBuilder();
+		final CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
+		countQuery.select(builder.count(countQuery.from(Blog.class)));
+		long blogCount = em.createQuery(countQuery).getSingleResult();
+		em.getTransaction().commit();
+		em.close();
+		return blogCount;
 	}
 
 }
