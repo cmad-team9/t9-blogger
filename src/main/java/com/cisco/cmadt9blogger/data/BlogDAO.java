@@ -7,7 +7,8 @@ import com.cisco.cmadt9blogger.api.Blog;
 public interface BlogDAO {
 	void createBlog(Blog blog);
 	Blog readBlog(int blogId);
-	List<Blog> getAllBlogs(int offset,int pageSize);
+	List<Blog> getAllBlogs(int offset,int pageSize,String searchStr);
 	long getBlogCount();
+	long getBlogSearchResultCount(String searchStr);
 
 }

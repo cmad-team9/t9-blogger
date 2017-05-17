@@ -25,13 +25,13 @@ function showHSLoggedOutOptions(makeVisible) {
 	
 }
 	
-function fetchAllBlogs(){
+function fetchAllBlogs(searchStr){
 	$.ajax({
 		url : 'rest/blogger/blogs',
 		type : 'get',
 		contentType: "application/json; charset=utf-8",
 		dataType : 'json',
-		data : {"offset": "0","pageSize": "2"},
+		data : {"offset": "0","pageSize": "2","searchStr":searchStr},
 		success : function(data,textStatus, jqXHR) { 
 			console.log("success callback");
 			console.log("Blog data:"+data);
@@ -66,48 +66,51 @@ function fetchAllBlogs(){
 } 
 
 function configurePagingOptions(linkheader) {
-	var parsedLinks = parse_link_header(linkheader); 
-	console.log("Parsing linkheader :"+parsedLinks);
-	for (var key in parsedLinks) {
-		console.log("**Enterng loop:"+key);
-	 // if (parsedLinks.hasOwnProperty(key))
-		var keyToMatch = key.toLowerCase();
-		console.log("keyToMatch:"+keyToMatch);
-		console.log("if check:"+(keyToMatch === "next"));
-		$("#next").hide();
-		$("#next").removeData("targetUrl");
-		$("#prev").hide();
-		$("#prev").removeData("targetUrl");
-		$("#first").hide();
-		$("#first").removeData("targetUrl");
-		$("#last").hide();
-		$("#last").removeData("targetUrl");
-		switch(keyToMatch) {
-			case "next":
-				console.log("**entering next");
-				$("#next").show();
-				$("#next").data("targetUrl",parsedLinks[key]);
-				break;
-			case "prev":
-				console.log("**entering prev");
-				$("#prev").show();
-				console.log("**prev shown");
-				$("#prev").data("targetUrl",parsedLinks[key]);
-				break;
-			case "first":
-				console.log("**entering first");
-				$("#first").show();
-				$("#first").data("targetUrl",parsedLinks[key]);
-				break;
-			case "last":
-				console.log("**entering last");
-				$("#last").show();
-				$("#last").data("targetUrl",parsedLinks[key]);
-				break;	
-			default:
-				break;
+	console.log("**linkheader.length:"+linkheader.length);
+	if(linkheader.length != 0) {
+		var parsedLinks = parse_link_header(linkheader); 
+		console.log("Parsing linkheader :"+parsedLinks);
+		for (var key in parsedLinks) {
+			console.log("**Enterng loop:"+key);
+		 // if (parsedLinks.hasOwnProperty(key))
+			var keyToMatch = key.toLowerCase();
+			console.log("keyToMatch:"+keyToMatch);
+			console.log("if check:"+(keyToMatch === "next"));
+			$("#next").hide();
+			$("#next").removeData("targetUrl");
+			$("#prev").hide();
+			$("#prev").removeData("targetUrl");
+			$("#first").hide();
+			$("#first").removeData("targetUrl");
+			$("#last").hide();
+			$("#last").removeData("targetUrl");
+			switch(keyToMatch) {
+				case "next":
+					console.log("**entering next");
+					$("#next").show();
+					$("#next").data("targetUrl",parsedLinks[key]);
+					break;
+				case "prev":
+					console.log("**entering prev");
+					$("#prev").show();
+					console.log("**prev shown");
+					$("#prev").data("targetUrl",parsedLinks[key]);
+					break;
+				case "first":
+					console.log("**entering first");
+					$("#first").show();
+					$("#first").data("targetUrl",parsedLinks[key]);
+					break;
+				case "last":
+					console.log("**entering last");
+					$("#last").show();
+					$("#last").data("targetUrl",parsedLinks[key]);
+					break;	
+				default:
+					break;
+			}
+			console.log("parsedLink:"+parsedLinks[key]);
 		}
-		console.log("parsedLink:"+parsedLinks[key]);
 	}
 }
 
@@ -494,9 +497,12 @@ $(document).ready(function() {
 		});
 	});
 	
+	$("#searchBtn").click(function(e) {
+		var searchStr = $("#searchInput").val();
+		console.log("Searched for :"+searchStr);
+		fetchAllBlogs(searchStr);
 	
-	
-	
+	});
 	$("#findLink").click(function(e) {
 		$("#findForm").show();
 	});

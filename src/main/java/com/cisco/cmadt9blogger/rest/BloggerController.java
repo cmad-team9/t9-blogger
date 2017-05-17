@@ -125,17 +125,24 @@ public class BloggerController {
 	@Path("/blogs")
 	@Produces(MediaType.APPLICATION_JSON) 
 	public Response getAllBlogs(@QueryParam("offset")@DefaultValue("0") int offset,
-			@QueryParam("pageSize")@DefaultValue("5")int pageSize , @Context UriInfo uriInfo) {
+			@QueryParam("pageSize")@DefaultValue("5")int pageSize ,@QueryParam("searchStr")String searchStr, @Context UriInfo uriInfo) {
 		System.out.println("*************All Blogs REST__");
 		//List<Blog> blogList = blogger.getAllBlogs();
 		System.out.println("offset:"+offset);
 		System.out.println("pageSize:"+pageSize);
 		System.out.println("uriInfo:"+uriInfo);
+		System.out.println("searchStr:"+searchStr);
 		System.out.println("uriInfo rri:"+uriInfo.getRequestUri());
 		UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
-		 GenericEntity<List<Blog>> blogList = new GenericEntity<List<Blog>>(blogger.getAllBlogs(offset,pageSize)) {};
+		 GenericEntity<List<Blog>> blogList = new GenericEntity<List<Blog>>(blogger.getAllBlogs(offset,pageSize,searchStr)) {};
 		 long totalCount = blogger.getBlogCount();
 		 System.out.println("totalCount:"+totalCount);
+		 long resultCount = blogger.getBlogSearchResultCount(searchStr);
+		 System.out.println("resultCount:"+resultCount);
+		 if(searchStr != null) {
+			 totalCount = resultCount;
+			 System.out.println("Setting totalcount as resultCount");
+		 }
 		 System.out.println("link Header :"+PaginationUtil.getLinkHeaders(uriBuilder, offset, totalCount, pageSize));
 		return Response.ok().entity(blogList).header(LINK, PaginationUtil.getLinkHeaders(uriBuilder, offset, totalCount, pageSize)).build();
 	}

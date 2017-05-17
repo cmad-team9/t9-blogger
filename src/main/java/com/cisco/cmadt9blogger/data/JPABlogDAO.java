@@ -3,14 +3,12 @@ package com.cisco.cmadt9blogger.data;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import com.cisco.cmadt9blogger.api.Blog;
-import com.cisco.cmadt9blogger.api.User;
 
 public class JPABlogDAO extends JPABloggerDAO implements BlogDAO {
 
@@ -35,7 +33,7 @@ public class JPABlogDAO extends JPABloggerDAO implements BlogDAO {
 	}
 	
 	@Override
-	public List<Blog> getAllBlogs(int offset,int pageSize) {
+	public List<Blog> getAllBlogs(int offset,int pageSize,String searchStr) {
 		EntityManager em = factory.createEntityManager();
 		em.getTransaction().begin();
 		//Check the working..Need to implement paging
@@ -53,8 +51,15 @@ public class JPABlogDAO extends JPABloggerDAO implements BlogDAO {
 		/***************************************/
 		
 		CriteriaQuery<Blog> criteriaQuery = builder.createQuery(Blog.class);
-		Root<Blog> from = criteriaQuery.from(Blog.class);
-		CriteriaQuery<Blog> select = criteriaQuery.select(from);
+		Root<Blog> blog = criteriaQuery.from(Blog.class);
+		CriteriaQuery<Blog> select = criteriaQuery.select(blog);
+		System.out.println("JPABlogDAO SearchStr :"+searchStr);
+		if(searchStr != null)
+		{
+			//Metamodel m = em.getMetamodel();
+			//EntityType<Blog> Blog_ = m.entity(Blog.class);
+			criteriaQuery.where(builder.like(builder.lower(blog.get("title")), "%"+searchStr.toLowerCase()+"%"));
+		}
 				 
 		TypedQuery<Blog> typedQuery = em.createQuery(select);
 //		while (pageNumber <= count.intValue()) {
@@ -86,6 +91,31 @@ public class JPABlogDAO extends JPABloggerDAO implements BlogDAO {
 		em.getTransaction().commit();
 		em.close();
 		return blogCount;
+	}
+
+	@Override
+	public long getBlogSearchResultCount(String searchStr) {
+		if(searchStr != null){
+			EntityManager em = factory.createEntityManager();
+			em.getTransaction().begin();
+			final CriteriaBuilder builder = em.getCriteriaBuilder();
+			
+			final CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
+			Root<Blog> blog = countQuery.from(Blog.class);
+			countQuery.select(builder.count(blog));
+			countQuery.where(builder.like(builder.lower(blog.get("title")), "%"+searchStr.toLowerCase()+"%"));
+			
+			
+			
+			long searchResultCount = em.createQuery(countQuery).getSingleResult();
+			em.getTransaction().commit();
+			em.close();
+			return searchResultCount;
+		}else {
+			return getBlogCount();
+		}
+		
+		
 	}
 
 }
