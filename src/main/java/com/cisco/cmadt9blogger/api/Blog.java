@@ -59,7 +59,7 @@ public class Blog {
 	  protected void onCreate() {
 		postedDate = new Date();
 	  }
-
+//For updating blog
 //	  @PreUpdate
 //	  protected void onUpdate() {
 //	    updated = new Date();
