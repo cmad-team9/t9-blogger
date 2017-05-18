@@ -125,7 +125,9 @@ public class BloggerController {
 	@Path("/blogs")
 	@Produces(MediaType.APPLICATION_JSON) 
 	public Response getAllBlogs(@QueryParam("offset")@DefaultValue("0") int offset,
-			@QueryParam("pageSize")@DefaultValue("5")int pageSize ,@QueryParam("searchStr")String searchStr, @Context UriInfo uriInfo) {
+			                    @QueryParam("pageSize")@DefaultValue("5")int pageSize,
+			                    @QueryParam("searchStr")String searchStr,			      
+			                    @Context UriInfo uriInfo) {
 		System.out.println("*************All Blogs REST__");
 		//List<Blog> blogList = blogger.getAllBlogs();
 		System.out.println("offset:"+offset);

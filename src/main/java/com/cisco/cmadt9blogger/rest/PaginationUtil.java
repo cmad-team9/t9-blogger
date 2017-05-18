@@ -5,8 +5,8 @@ import javax.ws.rs.core.UriBuilder;
 public class PaginationUtil {
 	
 	public static String getLinkHeaders(final UriBuilder uriBuilder, final int offset, final long totalCount, final int pageSize) {
-
-		int totalPages = (int) (totalCount/pageSize);
+		
+		int totalPages = (int)Math.ceil((double)totalCount/pageSize);
 		System.out.println("totalPages :"+totalPages);
         final StringBuilder linkHeader = new StringBuilder();
         if (hasNextPage(offset, totalPages)) {

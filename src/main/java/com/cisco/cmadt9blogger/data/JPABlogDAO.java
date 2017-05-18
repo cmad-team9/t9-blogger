@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import com.cisco.cmadt9blogger.api.Blog;
@@ -54,13 +55,19 @@ public class JPABlogDAO extends JPABloggerDAO implements BlogDAO {
 		Root<Blog> blog = criteriaQuery.from(Blog.class);
 		CriteriaQuery<Blog> select = criteriaQuery.select(blog);
 		System.out.println("JPABlogDAO SearchStr :"+searchStr);
+		System.out.println("JPABlogDAO with predicates");
+		Predicate searchPr = null;
 		if(searchStr != null)
 		{
-			//Metamodel m = em.getMetamodel();
-			//EntityType<Blog> Blog_ = m.entity(Blog.class);
-			criteriaQuery.where(builder.like(builder.lower(blog.get("title")), "%"+searchStr.toLowerCase()+"%"));
+			searchPr = builder.like(builder.lower(blog.get("title")), "%"+searchStr.toLowerCase()+"%");
+			//criteriaQuery.where(builder.like(builder.lower(blog.get("title")), "%"+searchStr.toLowerCase()+"%"));
+			criteriaQuery.where(builder.and(searchPr/*,userPr*/));
 		}
-				 
+		/*******************user filter**********************/
+		//Predicate userPr =  builder.like(builder.lower(blog.get("user").get("userId")), "jul");
+		//criteriaQuery.where(builder.and(/*searchPr,*/userPr));
+		/****************************************************/
+		criteriaQuery.orderBy(builder.desc(blog.get("postedDate")));		 
 		TypedQuery<Blog> typedQuery = em.createQuery(select);
 //		while (pageNumber <= count.intValue()) {
 //			typedQuery.setFirstResult(pageNumber - 1);

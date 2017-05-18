@@ -1,4 +1,4 @@
-#loginScreen,#profileUpdateScreen, #signUpScreen ,#newBlogForm,#newBlogScreen,#loggedInOptions,#blogAndCommentsScreen,#first,#previous,#next,#last{
+#loginScreen,#profileUpdateScreen, #signUpScreen ,#newBlogForm,#newBlogScreen,#loggedInOptions,#blogAndCommentsScreen,#first,#prev,#next,#last{
 	display: none;
 }
 H1 { text-align: center }
@@ -29,12 +29,21 @@ H1 { text-align: center }
 	margin-left: 20%;
 	margin-top: 3%;
 }
-
 #custom-search-input,#homeOptions_default{
 	
 	margin-top: 7%;
 }
 #custom-search-input .glyphicon-search{
     font-size: 15px;
+}
+#post0meta,#post1meta,#post2meta{
+	margin-left: 60%;
+	font-size: 12px;
+	font-style: italic;
+}
+#comment0meta,#comment1meta,#comment2meta{
+	margin-left: 40%;
+	font-size: 12px;
+	font-style: italic;
 }
 

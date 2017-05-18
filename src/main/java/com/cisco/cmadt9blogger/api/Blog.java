@@ -1,5 +1,6 @@
 package com.cisco.cmadt9blogger.api;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -13,6 +14,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 @Entity
 public class Blog {
 	
@@ -25,6 +29,11 @@ public class Blog {
 	//@JoinColumn(name = "userId",updatable = false)
 	private User user;
 	private String title;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date postedDate;
+	
+	
 	
 	
 	@Column(length=5000)
@@ -45,6 +54,16 @@ public class Blog {
 		this.description = description;
 		//this.comments = comments;
 	}
+	
+	@PrePersist
+	  protected void onCreate() {
+		postedDate = new Date();
+	  }
+
+//	  @PreUpdate
+//	  protected void onUpdate() {
+//	    updated = new Date();
+//	  }
 
 	public int getBlogId() {
 		return blogId;
@@ -83,6 +102,14 @@ public class Blog {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Date getPostedDate() {
+		return postedDate;
+	}
+
+	public void setPostedDate(Date postedDate) {
+		this.postedDate = postedDate;
 	}
 
 

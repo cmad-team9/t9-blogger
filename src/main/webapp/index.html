@@ -54,6 +54,10 @@
 						<p id ="post0Content">
 							POST 0 CONTENT
 						<p>
+						<div id ="post0meta">Posted by 
+								<span id = "post0author">xx</span>
+								<time id = "post0time">XXXX-XX-XX</time>
+						</div>
 						<a href="#" style="font-size: 10px;color:blue;"id = "commentOptionspost0"> COMMENTS</a>
 						<!--	<a href="#" style="font-size: 10px; margin-left:50%;"id="addComment"> Add Comment </a> -->
 						
@@ -65,6 +69,10 @@
 						<p id ="post1Content">
 							POST 1 CONTENT
 						<p>
+						<div id ="post1meta">Posted by 
+								<span id = "post1author">xx</span> 
+								<time id = "post1time">XXXX-XX-XX</time>
+						</div>
 						<a href="#" style="font-size: 10px;color:blue;"id = "commentOptionspost1"> COMMENTS</a>
 					</div>
 					<br>
@@ -74,6 +82,10 @@
 							<p id ="post2Content">
 							POST 2 CONTENT
 						<p>
+						<div id ="post2meta">Posted by 
+								<span id = "post2author">xx</span> 
+								<time id = "post2time">XXXX-XX-XX</time>
+						</div>
 						<a href="#" style="font-size: 10px;color:blue;"id = "commentOptionspost2"> COMMENTS</a>
 					</div>
 					<br>
@@ -170,27 +182,43 @@
 					<textarea rows="3" class="form-control" id="commentInput" placeholder="Your Comment"></textarea>
 				</div>		  
 				<button type="submit" id="submitCommentbtn">Post Comment</button>
-				
+				<br>
+				<br>
+				<h4 style ="text-decoration: underline">Comments</h4>
+				<hr />
 				<div id = "comment0">
 					<p id ="comment0Content">
 						COMMENT 0 CONTENT
 					<p>
-					<p style="font-size: 10px;color:blue;margin-left:50%" id="comment0user">commenter for comment 0</p>
+					<div id ="comment0meta">Posted by 
+						<span id = "comment0author">xx</span> 
+						<time id = "comment0time">XXXX-XX-XX</time>
+					</div>
 				</div>
+				<hr />
 				<br>
 				<div id = "comment1">
 					<p id ="comment1Content">
 						COMMENT 1 CONTENT
 					<p>
-					<p style="font-size: 10px;color:blue;margin-left:50%" id="comment1user">commenter for comment 1</p>
+					<div id ="comment1meta">Posted by 
+						<span id = "comment1author">xx</span> 
+						<time id = "comment1time">XXXX-XX-XX</time>
+					</div>
+					<!-- <p style="font-size: 10px;color:blue;margin-left:50%" id="comment1user">commenter for comment 1</p> -->
 				</div>
+				<hr />
 				<br>
 				<div id = "comment2">
 					<p id ="comment2Content">
 						COMMENT 2 CONTENT
 					<p>
-					<p style="font-size: 10px;color:blue;margin-left:50%" id="comment2user">commenter for comment 2</p>
+					<div id ="comment2meta">Posted by 
+						<span id = "comment2author">xx</span> 
+						<time id = "comment2time">XXXX-XX-XX</time>
+					</div>
 				</div>
+				<hr />
 				<br>
 				
 			</div>
@@ -198,7 +226,7 @@
 			
 	</div>
 	
-	
+	<script src="jquery-dateFormat.js"></script>
 	<script src="blogger.js"></script>
 </body>
 </html>

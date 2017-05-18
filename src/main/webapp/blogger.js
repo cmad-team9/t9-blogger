@@ -35,22 +35,8 @@ function fetchAllBlogs(searchStr){
 		success : function(data,textStatus, jqXHR) { 
 			console.log("success callback");
 			console.log("Blog data:"+data);
-			for(i = 0;i < data.length;i++){ 
-				console.log("i:"+i);
-				$("#post"+i+"Heading").text(data[i].title);
-				console.log("Blog Title:"+data[i].title);
-				$("#post"+i+"Content").text(data[i].description);
-				console.log("Blog Content:"+data[i].description);
-				console.log("Blog id:"+data[i].blogId);
-				$("#commentOptionspost"+i).data("blogData",data[i]);
-				//$("#commentOptionspost"+i).attr("blogTitle",data[i].title);
-				//$("#commentOptionspost"+i).attr("blogDescription",data[i].blogDescription);
-				console.log("Comment data :"+($("#commentOptionspost"+i).data("blogData")));
-				
-				
-			}
-			configurePagingOptions(jqXHR.getResponseHeader("LINK"));
-			console.log("LinkHeader at client :"+jqXHR.getResponseHeader("LINK"));
+			console.log("new display func")
+			displayBlogs(data,textStatus, jqXHR);
 			
 			
 		},
@@ -64,6 +50,38 @@ function fetchAllBlogs(searchStr){
 		}
 	});
 } 
+
+function displayBlogs(data,textStatus, jqXHR) {
+	for(i = 0;i < 3;i++){ 
+		if(i < data.length) {
+			console.log("i:"+i);
+			$("#post"+i+"Heading").text(data[i].title);
+			console.log("Blog Title:"+data[i].title);
+			$("#post"+i+"Content").text(data[i].description);
+			console.log("Blog Content:"+data[i].description);
+			console.log("Blog id:"+data[i].blogId);
+			$("#commentOptionspost"+i).data("blogData",data[i]);
+			//$("#commentOptionspost"+i).attr("blogTitle",data[i].title);
+			//$("#commentOptionspost"+i).attr("blogDescription",data[i].blogDescription);
+			console.log("Comment data :"+($("#commentOptionspost"+i).data("blogData")));
+			console.log("Blog user:"+data[i].user);
+			console.log("Blog created time:"+data[i].postedDate);
+			console.log("Blog created time:"+($.format.prettyDate(data[i].postedDate)));
+			
+			$("#post"+i+"author").text(data[i].user.userId);
+			$("#post"+i+"time").text($.format.prettyDate(data[i].postedDate));
+		}else {
+			console.log("CLEARING STALE DATA");
+			$("#post"+i+"Heading").text("");
+			$("#post"+i+"Content").text("");
+			$("#commentOptionspost"+i).removeData("blogData");
+			$("#post"+i+"author").text("");
+			$("#post"+i+"time").text("");
+		}		
+	}
+	configurePagingOptions(jqXHR.getResponseHeader("LINK"));
+	console.log("LinkHeader at client :"+jqXHR.getResponseHeader("LINK"));
+}
 
 function configurePagingOptions(linkheader) {
 	console.log("**linkheader.length:"+linkheader.length);
@@ -127,9 +145,14 @@ function fetchBlogComments(blogId){
 				console.log("i:"+i);
 				$("#comment"+i+"Content").text(data[i].comment);
 				console.log("Comment:"+data[i].comment);
-				$("#comment"+i+"user").text(data[i].commentor.userId);
+				$("#comment"+i+"author").text(data[i].commentor.userId);
 				console.log("commentor:"+data[i].commentor.userId);
 				console.log("Blog id:"+data[i].blogId);
+				
+				console.log("Comment created time:"+data[i].postedDate);
+				console.log("Comment created time:"+($.format.prettyDate(data[i].postedDate)));
+
+				$("#comment"+i+"time").text($.format.prettyDate(data[i].postedDate));
 				
 			}
 			
@@ -413,6 +436,7 @@ $(document).ready(function() {
 			success : function(data,textStatus, jqXHR) { 
 				console.log("success callback");
 				showHSLoggedInOptions(true);
+				fetchAllBlogs();
 			},
 			error : function( jqXHR,textStatus, errorThrown ) {
 				console.log("error callback :"+jqXHR);
@@ -469,20 +493,8 @@ $(document).ready(function() {
 			dataType : 'json', 
 			success : function(data,textStatus, jqXHR) { 
 				console.log("next success callback");
-				for(i = 0;i < data.length;i++){ 
-					console.log("i:"+i);
-					$("#post"+i+"Heading").text(data[i].title);
-					console.log("Blog Title:"+data[i].title);
-					$("#post"+i+"Content").text(data[i].description);
-					console.log("Blog Content:"+data[i].description);
-					console.log("Blog id:"+data[i].blogId);
-					$("#commentOptionspost"+i).data("blogData",data[i]);
-					//$("#commentOptionspost"+i).attr("blogTitle",data[i].title);
-					//$("#commentOptionspost"+i).attr("blogDescription",data[i].blogDescription);
-					console.log("Comment data :"+($("#commentOptionspost"+i).data("blogData")));
-					console.log("Comment data :"+($("#commentOptionspost"+i).data("blogData")));
-				}
-				configurePagingOptions(jqXHR.getResponseHeader("LINK"));
+				console.log("paging options new display func");
+			    displayBlogs(data,textStatus, jqXHR);
 				
 			},
 			error : function( jqXHR,textStatus, errorThrown ) {
@@ -503,22 +515,6 @@ $(document).ready(function() {
 		fetchAllBlogs(searchStr);
 	
 	});
-	$("#findLink").click(function(e) {
-		$("#findForm").show();
-	});
-	$("#findBtn").click(function() {
-		$("#findForm").hide();
-		var isbn = $("#findIsbn").val();
-		$.ajax({
-			url : 'rest/library/book/'+isbn,
-			type : 'get',
-			dataType : 'json',
-			contentType: "application/json; charset=utf-8",
-			success : function(data) {
-				console.log(data.response);
-				$("#findResult").show();
-				
-			}		});
-	});
+
 });
 
