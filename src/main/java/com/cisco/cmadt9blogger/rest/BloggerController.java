@@ -7,6 +7,7 @@ import static javax.ws.rs.core.HttpHeaders.LINK;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -119,6 +120,17 @@ public class BloggerController {
 		System.out.println("*************PATH CALLED");
 		Blog blog = blogger.getBlog(blogId);
 		return Response.ok().entity(blog).build();
+	}
+	//TODO
+	@DELETE
+	@Path("/blogs/{blogId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@RequireJWTToken
+	public Response deleteBlog(
+			@PathParam("blogId")int blogId) {
+		System.out.println("*************PATH CALLED");
+		//Blog blog = blogger.deleteBlog(blogId);
+		return Response.ok().build();
 	}
 	
 	@GET

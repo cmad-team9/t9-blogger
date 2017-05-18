@@ -41,14 +41,14 @@ public class T9BloggerTest {
 	public void signupNewUserTest() {
 		Blogger blogger = new T9Blogger();
 		User user = new User();
-		user.setUserId("binov");
-		user.setPassword("password");
+		user.setUserId("ninu");
+		user.setPassword("ninu");
 		try {
 			blogger.signupNewUser(user);
 		} catch (InvalidUserDetailsException iude) {
 			fail();
 		} catch (UserAlreadyExistsException uaee) {
-			//fail();
+			fail();
 		} catch (BloggerException be) {
 			fail();
 		}catch(Exception e){
