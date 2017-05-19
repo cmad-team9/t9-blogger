@@ -48,14 +48,14 @@ public class T9BloggerTest {
 		} catch (InvalidUserDetailsException iude) {
 			fail();
 		} catch (UserAlreadyExistsException uaee) {
-			fail();
+			//fail();
 		} catch (BloggerException be) {
 			fail();
 		}catch(Exception e){
 			e.printStackTrace();
 			fail();
 		}
-	}
-
+	}		
+		
 
 }
