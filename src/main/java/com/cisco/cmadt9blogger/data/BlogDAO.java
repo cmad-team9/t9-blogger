@@ -10,5 +10,6 @@ public interface BlogDAO {
 	List<Blog> getAllBlogs(int offset,int pageSize,String searchStr);
 	long getBlogCount();
 	long getBlogSearchResultCount(String searchStr);
+	void deleteBlog(int blogId);
 
 }

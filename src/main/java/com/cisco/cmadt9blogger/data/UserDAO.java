@@ -7,6 +7,7 @@ public interface UserDAO {
 	 void createUser(User user);
 	 User readUser(String userId);
 	 void updateUser(User user);
+	 void deleteUser(String userId);
 	
 
 }

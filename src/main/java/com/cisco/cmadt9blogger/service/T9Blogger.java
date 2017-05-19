@@ -169,4 +169,20 @@ public class T9Blogger implements Blogger{
 	public long getBlogSearchResultCount(String searchStr) throws BloggerException {
 		return blogDao.getBlogSearchResultCount(searchStr);
 	}
+
+	@Override
+	public void deleteUser(String userId) throws UserNotFoundException, BloggerException {
+		User user = userDao.readUser(userId);
+		if (user == null)
+			throw new UserNotFoundException();
+		userDao.deleteUser(userId);
+	}
+
+	@Override
+	public void deleteBlog(int blogId) throws BlogNotFoundException, BloggerException {
+		Blog blog = blogDao.readBlog(blogId);
+		if (blog == null)
+			throw new BlogNotFoundException();
+		blogDao.deleteBlog(blogId);
+	}
 }

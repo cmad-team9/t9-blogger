@@ -125,4 +125,14 @@ public class JPABlogDAO extends JPABloggerDAO implements BlogDAO {
 		
 	}
 
+	@Override
+	public void deleteBlog(int blogId) {
+		EntityManager em = factory.createEntityManager();
+		em.getTransaction().begin();
+		Blog blog = em.find(Blog.class,blogId);
+		em.remove(blog);
+		em.getTransaction().commit();
+		em.close();
+	}
+
 }

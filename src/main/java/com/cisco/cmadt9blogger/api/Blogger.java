@@ -9,11 +9,13 @@ public interface Blogger {
 	User getUserDetails(String userId) throws UserNotFoundException,BloggerException;
 //	public void logoutUser(User user) throws BloggerException;
 	void updateUserProfile(User user) throws InvalidUserDetailsException,BloggerException;
+	void deleteUser(String userId)  throws UserNotFoundException,BloggerException;
 	void addBlog(Blog blog) throws InvalidBlogException, 
 	DuplicateBlogException, BloggerException;
 //	public List<Blog> findBlogs(String title) throws BlogNotFoundException, BloggerException;
 	List<Blog> getAllBlogs(int offset,int pageSize,String searchStr) throws BlogNotFoundException,BloggerException; 
 	Blog getBlog(int blogId/*,User user*/) throws BlogNotFoundException,BloggerException;
+	void deleteBlog(int blogId) throws BlogNotFoundException,BloggerException;
 	void addComment(BlogComment comment) throws BloggerException;
 	List<BlogComment> getAllComments(int blogId) throws BlogNotFoundException, BloggerException;
 

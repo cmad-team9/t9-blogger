@@ -45,4 +45,16 @@ public class JPAUserDAO extends JPABloggerDAO implements UserDAO{
 		em.close();
 	}
 
+	@Override
+	public void deleteUser(String userId) {
+		EntityManager em = factory.createEntityManager();
+		em.getTransaction().begin();
+		User user = em.find(User.class,userId);
+		System.out.println("JPAUserDAO user :"+user);
+		em.remove(user);
+		em.getTransaction().commit();
+		em.close();
+		
+	}
+
 }
