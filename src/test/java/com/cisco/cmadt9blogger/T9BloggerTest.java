@@ -120,7 +120,7 @@ public class T9BloggerTest {
 		blogger.deleteBlog(blogId);
 	}
 	
-	@Ignore
+	@Test
 	public void addAndReadCommentTest(){
 		Blog blog = new Blog();
 		blog.setTitle("HELLO WORLD!");
