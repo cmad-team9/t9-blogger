@@ -1,4 +1,4 @@
-#loginScreen,#profileUpdateScreen, #signUpScreen ,#newBlogForm,#newBlogScreen,#test2,#loggedInOptions,#selectedPost,#addCommentOption,#commentDetails,#loginToComment,#first,#prev,#next,#last{
+#loginScreen,#profileUpdateScreen, #signUpScreen ,#newBlogForm,#newBlogScreen,#test2,#loggedInOptions,#selectedPost,#addCommentOption,#commentDetails,#loginToComment,#first,#prev,#next,#last,#loadMoreComments{
 	display: none;
 }
 H1 { text-align: center }
@@ -38,7 +38,7 @@ H1 { text-align: center }
 	font-size: 12px;
 	font-style: italic;
 }
-#comment0meta,#comment1meta,#comment2meta{
+.commentmeta{
 	margin-left: 40%;
 	font-size: 12px;
 	font-style: italic;

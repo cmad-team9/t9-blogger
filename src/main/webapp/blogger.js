@@ -150,7 +150,31 @@ function configureCommentPagingOptions(linkheader) {
 	}
 }
 
+function clearExtraCommentDivs() {
+	console.log("Clearing additionally created divs");
+	var totalCommentDivs = $("#loadMoreComments").data("loadedCommentCount");
+	console.log("totalCommentDivs :"+totalCommentDivs);
+	$(".extradivs").remove();
+	console.log("Total divs after removing extra :"+$("#commentPosts > div").length);
+	$("#loadMoreComments").data("loadedCommentCount",0);
+	/*if(totalCommentDivs > 3) {
+		//for(i = 3;i < totalCommentDivs;i++){
+			console.log("Removing comment"+i);
+			//$("#comment"+i).remove();
+				$(".extradivs").remove();
+			 //$("#commentPosts").closest('.extradivs').remove();
+			 console.log("****rr withot 4 loop**********");
+		//}
+		console.log("Total divs after removing extra :"+$("#commentPosts > div").length);
+		$("#loadMoreComments").data("loadedCommentCount",3);
+	}else{
+		console.log("No extra divs to clear");
+	}*/
+	
+}
+
 function configurePagingOptions(linkheader) {
+	
 	console.log("**linkheader.length:"+linkheader.length);
 	if(linkheader.length != 0) {
 		var parsedLinks = parse_link_header(linkheader); 
@@ -200,6 +224,8 @@ function configurePagingOptions(linkheader) {
 }
 
 function fetchBlogComments(blogId,sortorder){
+	//remove dynamically created contents
+	clearExtraCommentDivs();
 	$.ajax({
 		url : 'rest/blogger/blogs/'+blogId+'/comments',
 		type : 'get',
@@ -210,7 +236,7 @@ function fetchBlogComments(blogId,sortorder){
 			console.log("success callback");
 			console.log("Blog data:"+data);
 			for(i = 0;i < data.length;i++){ 
-				console.log("i:"+i);
+			/*	console.log("i:"+i);
 				$("#comment"+i+"Content").text(data[i].comment);
 				console.log("Comment:"+data[i].comment);
 				$("#comment"+i+"author").text(data[i].commentor.userId);
@@ -220,7 +246,39 @@ function fetchBlogComments(blogId,sortorder){
 				console.log("Comment created time:"+data[i].postedDate);
 				console.log("Comment created time:"+($.format.prettyDate(data[i].postedDate)));
 
-				$("#comment"+i+"time").text($.format.prettyDate(data[i].postedDate));
+				$("#comment"+i+"time").text($.format.prettyDate(data[i].postedDate)); */
+				
+				
+				var newcommentIdx = i;
+					console.log("new comment Id:"+newcommentIdx);
+					var commentData = data[i].comment;
+					var commentAuthor = data[i].commentor.userId;
+					var commentTime = $.format.prettyDate(data[i].postedDate);
+					comment = $("<div id ='comment'+newcommentIdx class='extradivs'>").append("<p id='comment'+newcommentIdx>"+commentData+"</p>")
+							       .append($("<div id ='comment'+newcommentIdx+'meta' class='commentmeta' style='margin-left: 40%;font-size: 12px;font-style: italic;'>Posted by </div>")
+								   .append("<span id = 'comment'+newcommentIdx+'author'>"+commentAuthor+" "+"</span>")
+							       .append("<time id = 'comment'+newcommentIdx+'time'>"+commentTime+"</time>"))
+								   .append('<hr/>');;
+
+					// add the element to the body
+					//$('#comment'+newcommentIdx+'meta').addClass('commentmeta');
+					// $("#commentPosts").append('<hr/>');
+					console.log("Adding comment"+newcommentIdx);
+					
+					$("#commentPosts").append(comment);
+					console.log("Total divs after adding :"+$("#commentPosts > div").length);
+					
+					
+					console.log("i:"+i);
+					//$("#comment"+newcommentIdx+"Content").text(data[i].comment);
+					console.log("Comment:"+data[i].comment);
+					//$("#comment"+newcommentIdx+"author").text(data[i].commentor.userId);
+					console.log("commentor:"+data[i].commentor.userId);
+					console.log("Blog id:"+data[i].blogId);
+					
+					console.log("Comment created time:"+data[i].postedDate);
+					console.log("Comment created time:"+($.format.prettyDate(data[i].postedDate)));
+
 				
 				
 			}
@@ -806,6 +864,7 @@ $(document).ready(function() {
 		console.log("sorting order sortingorder text:"+$('#commentSortingOrder').find(":selected").text());
 		var blogId = $("#selectedPost").data("blogData").blogId;
 		console.log("sorting order blogId:"+blogId);
+		$("#loadMoreComments").data("sortorder",sortingorder);
 		switch(sortingorder) {
 			case "oldest":
 				console.log("sorting order oldest first");
@@ -814,6 +873,7 @@ $(document).ready(function() {
 				break;
 			case "newest":
 				console.log("sorting order newest first");
+				
 				fetchBlogComments(blogId,sortingorder);
 				break;
 			default:
@@ -823,40 +883,54 @@ $(document).ready(function() {
 	
 	
 	$("#loadMoreComments").click(function(e) {
-		console.log("loading more comments");
+		console.log("loading more comments**");
 		var targetUrl = $(this).data("targetUrl");
 		console.log("targetUrl in comment pagingOptions click :"+targetUrl);
 		var loadedCommentCount = $("#loadMoreComments").data("loadedCommentCount");
+		var sortorder = $("#loadMoreComments").data("sortorder");
+		console.log("loading more comments sortorder:"+sortorder);
+		console.log("Total divs b4 adding :"+$("#commentPosts > div").length);
 		$.ajax({
 			url : targetUrl,
 			type : 'get',
 			contentType: "application/json; charset=utf-8",
+			data : {"sortOrder":sortorder},
 			dataType : 'json', 
 			success : function(data,textStatus, jqXHR) { 
 				console.log("next success callback");
-				console.log("paging options new display func");
+				console.log("comment paging options new display func");
 				for(i = 0;i < data.length;i++){ 
-					/*
-					var commentPost = $("<div class='table'>").append($("<div class='row'>")
-							.append("<label>Denominazione Gruppo</label>")
-							.append("<input type='text' id='denominazione'>"));
+					var newcommentIdx = (loadedCommentCount+i);
+					console.log("new comment Id:"+newcommentIdx);
+					var commentData = data[i].comment;
+					var commentAuthor = data[i].commentor.userId;
+					var commentTime = $.format.prettyDate(data[i].postedDate);
+					comment = $("<div id ='comment'+newcommentIdx class='extradivs'>").append("<p id='comment'+newcommentIdx>"+commentData+"</p>")
+							       .append($("<div id ='comment'+newcommentIdx+'meta' class='commentmeta' style='margin-left: 40%;font-size: 12px;font-style: italic;'>Posted by </div>")
+								   .append("<span id = 'comment'+newcommentIdx+'author'>"+commentAuthor+" "+"</span>")
+							       .append("<time id = 'comment'+newcommentIdx+'time'>"+commentTime+"</time>"))
+								   .append('<hr/>');;
 
 					// add the element to the body
-					$("body").appendTo("#commentPosts");*/
+					//$('#comment'+newcommentIdx+'meta').addClass('commentmeta');
+					// $("#commentPosts").append('<hr/>');
+					console.log("Adding comment"+newcommentIdx);
+					
+					$("#commentPosts").append(comment);
+					console.log("Total divs after adding :"+$("#commentPosts > div").length);
 					
 					
-					/*
 					console.log("i:"+i);
-					$("#comment"+i+"Content").text(data[i].comment);
+					//$("#comment"+newcommentIdx+"Content").text(data[i].comment);
 					console.log("Comment:"+data[i].comment);
-					$("#comment"+i+"author").text(data[i].commentor.userId);
+					//$("#comment"+newcommentIdx+"author").text(data[i].commentor.userId);
 					console.log("commentor:"+data[i].commentor.userId);
 					console.log("Blog id:"+data[i].blogId);
 					
 					console.log("Comment created time:"+data[i].postedDate);
 					console.log("Comment created time:"+($.format.prettyDate(data[i].postedDate)));
 
-					$("#comment"+i+"time").text($.format.prettyDate(data[i].postedDate));*/
+					//$("#comment"+newcommentIdx+"time").text($.format.prettyDate(data[i].postedDate));
 				}	
 				$("#loadMoreComments").data("loadedCommentCount",loadedCommentCount+data.length);
 				configureCommentPagingOptions(jqXHR.getResponseHeader("LINK"));	

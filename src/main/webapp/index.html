@@ -51,9 +51,9 @@
 				</div>
 				<form class="navbar-form navbar-left">
 				  <div class="input-group">
-					<input type="text" class="form-control" placeholder="Search">
+					<input type="text" class="form-control" placeholder="Search" id="searchInput">
 					<div class="input-group-btn">
-					  <button class="btn btn-default" type="submit">
+					  <button class="btn btn-default" type="button" id="searchBtn">
 						<i class="glyphicon glyphicon-search"></i>
 					  </button>
 					</div>
@@ -233,9 +233,9 @@
 				
 				<div id = "selectedPost">
 					<!--<a href="#" id ="selectedHeading" data-toggle="modal" data-target="#selectedDescriptionModal">SELECTED POST TITLE</a> -->
-					<h3 id ="selectedHeading">SELECTED POST TITLE</h3>
+					<h3 id ="selectedHeading"></h3>
 					<p id ="selectedContent">
-						SELECTED POST CONTENT
+						
 					<p>
 				</div>
 				<br>
@@ -258,40 +258,44 @@
 					</select>
 					<hr />
 					<div id ="commentPosts">
-						<div id = "comment0">
+					<!--	<div id = "comment0">
 							<p id ="comment0Content">
 								COMMENT 0 CONTENT
 							<p>
-							<div id ="comment0meta">Posted by 
+							<div id ="comment0meta" class='commentmeta'>Posted by 
 								<span id = "comment0author">xx</span> 
 								<time id = "comment0time">XXXX-XX-XX</time>
 							</div>
+							<hr />
 						</div>
-						<hr />
-						<br>
+						
+						
 						<div id = "comment1">
 							<p id ="comment1Content">
 								COMMENT 1 CONTENT
 							<p>
-							<div id ="comment1meta">Posted by 
+							<div id ="comment1meta" class='commentmeta'>Posted by 
 								<span id = "comment1author">xx</span> 
 								<time id = "comment1time">XXXX-XX-XX</time>
 							</div>
-							<!-- <p style="font-size: 10px;color:blue;margin-left:50%" id="comment1user">commenter for comment 1</p> -->
+							
+							<hr />
 						</div>
-						<hr />
-						<br>
+						
+						
 						<div id = "comment2">
 							<p id ="comment2Content">
 								COMMENT 2 CONTENT
 							<p>
-							<div id ="comment2meta">Posted by 
+							<div id ="comment2meta" class='commentmeta'>Posted by 
 								<span id = "comment2author">xx</span> 
 								<time id = "comment2time">XXXX-XX-XX</time>
 							</div>
-						</div>
+							<hr />
+						</div>  -->
+						
 					</div>
-					<hr />
+					
 					<a href="#" id="loadMoreComments">Load More Comments</a> 
 				</div>
 			</div>
