@@ -38,9 +38,19 @@ public class JPAUserDAO extends JPABloggerDAO implements UserDAO{
 		em.getTransaction().begin();
 		User storedUser = em.find(User.class,user.getUserId());
 		System.out.println("JPAUserDAO user :"+user);
-		storedUser.setNickName(user.getNickName());
-		storedUser.setFirstName(user.getFirstName());
-		storedUser.setLastName(user.getLastName());
+		if(user.getNickName() != null && user.getNickName().trim() != ""){
+			storedUser.setNickName(user.getNickName());
+		}
+		if(user.getFirstName() != null && user.getFirstName().trim() != ""){
+			storedUser.setFirstName(user.getFirstName());
+		}
+		if(user.getLastName() != null && user.getLastName().trim() != "") {
+			storedUser.setLastName(user.getLastName());
+		}
+		if(user.getPassword() != null && user.getPassword().trim() != "") {
+			storedUser.setPassword(user.getPassword());
+		}
+		
 		em.getTransaction().commit();
 		em.close();
 	}

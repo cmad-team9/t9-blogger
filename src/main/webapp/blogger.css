@@ -1,4 +1,4 @@
-#loginScreen,#profileUpdateScreen, #signUpScreen ,#newBlogForm,#newBlogScreen,#loggedInOptions,#blogAndCommentsScreen,#first,#prev,#next,#last{
+#loginScreen,#profileUpdateScreen, #signUpScreen ,#newBlogForm,#newBlogScreen,#test2,#loggedInOptions,#selectedPost,#addCommentOption,#commentDetails,#loginToComment,#first,#prev,#next,#last{
 	display: none;
 }
 H1 { text-align: center }
@@ -29,10 +29,7 @@ H1 { text-align: center }
 	margin-left: 20%;
 	margin-top: 3%;
 }
-#custom-search-input,#homeOptions_default{
-	
-	margin-top: 7%;
-}
+
 #custom-search-input .glyphicon-search{
     font-size: 15px;
 }
@@ -46,4 +43,17 @@ H1 { text-align: center }
 	font-size: 12px;
 	font-style: italic;
 }
+#selectedPost,#addCommentOption,#loginToComment,#commentDetails {
+	margin-left:25%;
+}
 
+#commentHeading{
+	display: inline;
+}
+#commentSortingOrder{
+	display: inline;
+	margin-left:25%;
+}
+.main{
+	margin-top:6%;
+}

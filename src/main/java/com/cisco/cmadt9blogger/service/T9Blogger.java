@@ -82,8 +82,8 @@ public class T9Blogger implements Blogger{
 	}
 
 	@Override
-	public List<Blog> getAllBlogs(int offset,int pageSize,String searchStr) throws BlogNotFoundException, BloggerException {
-		List<Blog> blogList = blogDao.getAllBlogs(offset,pageSize,searchStr);
+	public List<Blog> getAllBlogs(int offset,int pageSize,String searchStr,String userFilter) throws BlogNotFoundException, BloggerException {
+		List<Blog> blogList = blogDao.getAllBlogs(offset,pageSize,searchStr,userFilter);
 		if (blogList == null || blogList.isEmpty())
 			throw new BlogNotFoundException();
 		return blogList;
@@ -145,8 +145,8 @@ public class T9Blogger implements Blogger{
 	}
 
 	@Override
-	public List<BlogComment> getAllComments(int blogId) throws BlogNotFoundException, BloggerException {
-		List<BlogComment> commentList = commentDAO.getAllComments(blogId);
+	public List<BlogComment> getAllComments(int blogId,int offset,int pageSize,String sortOrder) throws BlogNotFoundException, BloggerException {
+		List<BlogComment> commentList = commentDAO.getAllComments(blogId,offset,pageSize,sortOrder);
 		//TODO Check for other exceptions
 		if (commentList == null || commentList.isEmpty())
 			throw new BlogNotFoundException();
@@ -166,8 +166,8 @@ public class T9Blogger implements Blogger{
 	}
 
 	@Override
-	public long getBlogSearchResultCount(String searchStr) throws BloggerException {
-		return blogDao.getBlogSearchResultCount(searchStr);
+	public long getBlogSearchResultCount(String searchStr,String userFilter) throws BloggerException {
+		return blogDao.getBlogSearchResultCount(searchStr,userFilter);
 	}
 
 	@Override

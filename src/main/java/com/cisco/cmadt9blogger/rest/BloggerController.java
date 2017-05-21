@@ -65,6 +65,11 @@ public class BloggerController {
 	@RequireJWTToken
 	public Response updateUser(@HeaderParam("userId") String userId,
 			User user) {
+		System.out.println("updateUser userId:"+userId);
+		System.out.println("updateUser password:"+user.getPassword());
+		System.out.println("updateUser firstname:"+user.getFirstName());
+		System.out.println("updateUser lastname:"+user.getLastName());
+		System.out.println("updateUser nickname:"+user.getNickName());
 		user.setUserId(userId);
 		blogger.updateUserProfile(user);
 		return Response.ok().build();
@@ -138,7 +143,8 @@ public class BloggerController {
 	@Produces(MediaType.APPLICATION_JSON) 
 	public Response getAllBlogs(@QueryParam("offset")@DefaultValue("0") int offset,
 			                    @QueryParam("pageSize")@DefaultValue("5")int pageSize,
-			                    @QueryParam("searchStr")String searchStr,			      
+			                    @QueryParam("searchStr")String searchStr,	
+			                    @QueryParam("userFilter")String userFilter,		
 			                    @Context UriInfo uriInfo) {
 		System.out.println("*************All Blogs REST__");
 		//List<Blog> blogList = blogger.getAllBlogs();
@@ -148,10 +154,10 @@ public class BloggerController {
 		System.out.println("searchStr:"+searchStr);
 		System.out.println("uriInfo rri:"+uriInfo.getRequestUri());
 		UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
-		 GenericEntity<List<Blog>> blogList = new GenericEntity<List<Blog>>(blogger.getAllBlogs(offset,pageSize,searchStr)) {};
+		 GenericEntity<List<Blog>> blogList = new GenericEntity<List<Blog>>(blogger.getAllBlogs(offset,pageSize,searchStr,userFilter)) {};
 		 long totalCount = blogger.getBlogCount();
 		 System.out.println("totalCount:"+totalCount);
-		 long resultCount = blogger.getBlogSearchResultCount(searchStr);
+		 long resultCount = blogger.getBlogSearchResultCount(searchStr,userFilter);
 		 System.out.println("resultCount:"+resultCount);
 		 if(searchStr != null) {
 			 totalCount = resultCount;
@@ -178,11 +184,19 @@ public class BloggerController {
 	@GET
 	@Path("/blogs/{blogId}/comments")
 	@Produces(MediaType.APPLICATION_JSON) 
-	public Response getAllComments(@PathParam("blogId")int blogId) {
+	public Response getAllComments(@PathParam("blogId")int blogId,
+								   @QueryParam("offset")@DefaultValue("0") int offset,
+            					   @QueryParam("pageSize")@DefaultValue("5")int pageSize,
+								   @QueryParam("sortOrder")String sortOrder,
+								   @Context UriInfo uriInfo) {
 		System.out.println("*************All Comments REST");
 		//List<BlogComment> blogList = blogger.getAllComments(blogId);
-		 GenericEntity<List<BlogComment>> commentList = new GenericEntity<List<BlogComment>>(blogger.getAllComments(blogId)) {};
-		return Response.ok().entity(commentList).build();
+		UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
+		 long totalCommentCount = blogger.getCommentCount(blogId);
+		 System.out.println("getCommentCount :"+totalCommentCount);
+		 GenericEntity<List<BlogComment>> commentList = new GenericEntity<List<BlogComment>>(blogger.getAllComments(blogId, offset, pageSize,sortOrder)) {};
+		 System.out.println("link Header :"+PaginationUtil.getLinkHeaders(uriBuilder, offset, totalCommentCount, pageSize));
+		return Response.ok().entity(commentList).header(LINK, PaginationUtil.getLinkHeaders(uriBuilder, offset, totalCommentCount, pageSize)).build();
 	}
 
 	@GET
