@@ -49,8 +49,8 @@ public class T9BloggerTest {
 	@Test
 	public void signupNewUserTest() {
 		User user = new User();
-		user.setUserId("ninu");
-		user.setPassword("ninu");
+		user.setUserId("ninut");
+		user.setPassword("ninut");
 		try {
 			blogger.signupNewUser(user);
 		} catch (InvalidUserDetailsException iude) {
@@ -63,42 +63,42 @@ public class T9BloggerTest {
 			e.printStackTrace();
 			fail();
 		}
-		blogger.deleteUser("ninu");
+		blogger.deleteUser("ninut");
 	}		
 	
 	@Test
 	public void loginUserTest(){
 		User user = new User();
-		user.setUserId("ninu");
-		user.setPassword("ninu");
+		user.setUserId("ninut");
+		user.setPassword("ninut");
 		try {
 			blogger.signupNewUser(user);
-			blogger.loginUser("ninu","ninu");
+			blogger.loginUser("ninut","ninut");
 		} catch (InvalidCredentialsException iude) {
 			fail();
 		}catch(Exception e){
 			e.printStackTrace();
 			fail();
 		}
-		blogger.deleteUser("ninu");
+		blogger.deleteUser("ninut");
 	}
 	
 	@Test
 	public void getUserDetailsTest(){
 		User user = new User();
-		user.setUserId("ninu");
-		user.setPassword("ninu");
+		user.setUserId("ninut");
+		user.setPassword("ninut");
 		
 		try {
 			blogger.signupNewUser(user);
-			blogger.getUserDetails("ninu");
+			blogger.getUserDetails("ninut");
 		} catch (UserNotFoundException unfe) {
 			fail();
 		}catch(Exception e){
 			e.printStackTrace();
 			fail();
 		}
-		blogger.deleteUser("ninu");
+		blogger.deleteUser("ninut");
 	}
 	
 	@Test
@@ -109,7 +109,7 @@ public class T9BloggerTest {
 		int blogId = -1;
 		try {
 			blogger.addBlog(blog);
-			List<Blog> blogList = blogger.getAllBlogs(0,2,null);
+			List<Blog> blogList = blogger.getAllBlogs(0,2,null,null);
 			blogId = blogList.get(0).getBlogId();
 		} catch (BlogNotFoundException bnfe) {
 			fail();
@@ -128,7 +128,7 @@ public class T9BloggerTest {
 		int blogId = -1;
 		try {
 			blogger.addBlog(blog);
-			List<Blog> blogList = blogger.getAllBlogs(0,2,null);
+			List<Blog> blogList = blogger.getAllBlogs(0,2,null,null);
 			blogId = blogList.get(0).getBlogId();
 		} catch (BlogNotFoundException bnfe) {
 			fail();
