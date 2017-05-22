@@ -1,4 +1,4 @@
-#loginScreen,#profileUpdateScreen, #signUpScreen ,#newBlogForm,#newBlogScreen,#test2,#loggedInOptions,#selectedPost,#addCommentOption,#commentDetails,#loginToComment,#first,#prev,#next,#last,#loadMoreComments{
+#loginScreen,#profileUpdateScreen, #signUpScreen ,#newBlogForm,#newBlogScreen,#test2,#loggedInOptions,#selectedPost,#first,#prev,#next,#last,#addCommentOption,#commentDetails,#loginToComment,#loadMoreComments,#errorScreen{
 	display: none;
 }
 H1 { text-align: center }
@@ -56,4 +56,9 @@ H1 { text-align: center }
 }
 .main{
 	margin-top:6%;
+}
+#errorMsg{
+	margin-left:40%;
+	margin-top:15%;
+	font-size: 25px;
 }

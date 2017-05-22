@@ -42,12 +42,14 @@ public class PaginationUtil {
     	return uriBuilder.replaceQueryParam("offset", offset - 1).replaceQueryParam("pageSize", pageSize).build().toString();
     }
 
-    private static String constructFirstPageUri(final UriBuilder uriBuilder, final int size) {
-        return uriBuilder.replaceQueryParam("page", 0).replaceQueryParam("size", size).build().toString();
+    private static String constructFirstPageUri(final UriBuilder uriBuilder, final int pageSize) {
+       // return uriBuilder.replaceQueryParam("page", 0).replaceQueryParam("size", size).build().toString();
+    	return uriBuilder.replaceQueryParam("offset", 0).replaceQueryParam("pageSize", pageSize).build().toString();
     }
 
-    private static String constructLastPageUri(final UriBuilder uriBuilder, final int totalPages, final int size) {
-        return uriBuilder.replaceQueryParam("page", totalPages-1).replaceQueryParam("size", size).build().toString();
+    private static String constructLastPageUri(final UriBuilder uriBuilder, final int totalPages, final int pageSize) {
+        //return uriBuilder.replaceQueryParam("page", totalPages-1).replaceQueryParam("size", size).build().toString();
+    	return uriBuilder.replaceQueryParam("offset", totalPages-1).replaceQueryParam("pageSize", pageSize).build().toString();
     }
 
     private static boolean hasNextPage(final int page, final int totalPages) {

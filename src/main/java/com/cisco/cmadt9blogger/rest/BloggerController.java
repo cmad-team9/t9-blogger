@@ -152,6 +152,7 @@ public class BloggerController {
 		System.out.println("pageSize:"+pageSize);
 		System.out.println("uriInfo:"+uriInfo);
 		System.out.println("searchStr:"+searchStr);
+		System.out.println("userFilter:"+userFilter);
 		System.out.println("uriInfo rri:"+uriInfo.getRequestUri());
 		UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
 		 GenericEntity<List<Blog>> blogList = new GenericEntity<List<Blog>>(blogger.getAllBlogs(offset,pageSize,searchStr,userFilter)) {};
@@ -192,6 +193,7 @@ public class BloggerController {
 		System.out.println("*************All Comments REST");
 		//List<BlogComment> blogList = blogger.getAllComments(blogId);
 		UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
+		System.out.println("REST getAllComments blogId:"+blogId);
 		 long totalCommentCount = blogger.getCommentCount(blogId);
 		 System.out.println("getCommentCount :"+totalCommentCount);
 		 GenericEntity<List<BlogComment>> commentList = new GenericEntity<List<BlogComment>>(blogger.getAllComments(blogId, offset, pageSize,sortOrder)) {};

@@ -1,4 +1,4 @@
-function showHSLoggedInOptions(makeVisible){
+/*function showHSLoggedInOptions(makeVisible){
 	if(makeVisible) {
 		$("#custom-search-input").show();
 		$("#loggedInOptions").show();
@@ -23,7 +23,7 @@ function showHSLoggedOutOptions(makeVisible) {
 		$("#homeScreenBody").hide();
 	}
 	
-}
+}*/
 
 function configureMenuBarOptions(screen){
 	console.log("configureMenuBarOptions");
@@ -63,12 +63,22 @@ function configureMenuBarOptions(screen){
 function fetchAllBlogs(searchStr,userfilter){
 	console.log("fetchAllBlogs searchStr:"+searchStr);
 	console.log("fetchAllBlogs userfilter:"+userfilter);
+	if(searchStr != undefined && searchStr != null && searchStr.trim != "")
+	{
+		console.log("fetchAllBlogs storing searchStr"+searchStr);
+		$("#searchBtn").data("searchStr",searchStr);
+	} else {
+		console.log("fetchAllBlogs clearing searchStr");
+		$("#searchBtn").removeData("searchStr");
+	}
+	
+	
 	$.ajax({
 		url : 'rest/blogger/blogs',
 		type : 'get',
 		contentType: "application/json; charset=utf-8",
 		dataType : 'json',
-		data : {"offset": "0","pageSize": "2","searchStr":searchStr,"userFilter":userfilter},
+		data : {"offset": "0","pageSize": "3","searchStr":searchStr,"userFilter":userfilter},
 		success : function(data,textStatus, jqXHR) { 
 			console.log("success callback");
 			console.log("Blog data:"+data);
@@ -81,17 +91,41 @@ function fetchAllBlogs(searchStr,userfilter){
 			console.log("error callback :"+jqXHR);
 			console.log("error callback:"+textStatus);
 			console.log("error callback:"+errorThrown);
+			showErrorScreen("No content Found");
 		},
 		 complete : function( jqXHR, textStatus ) {
 			console.log("complete callback"); 
+			$("#searchInput").val("");
+			$("#newBlogTitle").val("");
+		    $("#blogDescriptionIInput").val("");
 		}
 	});
 } 
 
-function displayBlogs(data,textStatus, jqXHR) {
-	showBlogAndCommentsScreen(false);
+function hideAllScreens() {
+	$("#homeScreenBody").hide();
 	$("#loginScreen").hide();
-	showNewBlogScreen(false);
+	$("#signUpScreen").hide();
+	$("#profileUpdateScreen").hide();
+	$("#newBlogScreen").hide();
+	$("#selectedPost").hide();
+	$("#loginToComment").hide();
+	$("#addCommentOption").hide();
+	$("#commentDetails").hide();
+	$("#errorScreen").hide();
+}
+
+function showErrorScreen(errorMsg){
+	
+	hideAllScreens();
+	$("#errorMsg").text(errorMsg);
+	$("#errorScreen").show();
+	
+}
+
+function displayBlogs(data,textStatus, jqXHR) {
+	
+	hideAllScreens();
 	for(i = 0;i < 3;i++){ 
 		if(i < data.length) {
 			console.log("i:"+i);
@@ -178,22 +212,45 @@ function configurePagingOptions(linkheader) {
 	console.log("**linkheader.length:"+linkheader.length);
 	if(linkheader.length != 0) {
 		var parsedLinks = parse_link_header(linkheader); 
-		console.log("Parsing linkheader :"+parsedLinks);
+		console.log("--Parsing linkheader-- :"+parsedLinks);
+		$("#next").hide();
+		$("#next").removeData("targetUrl");
+		$("#prev").hide();
+		$("#prev").removeData("targetUrl");
+		$("#first").hide();
+		$("#first").removeData("targetUrl");
+		$("#last").hide();
+		$("#last").removeData("targetUrl");
 		for (var key in parsedLinks) {
 			console.log("**Enterng loop:"+key);
 		 // if (parsedLinks.hasOwnProperty(key))
 			var keyToMatch = key.toLowerCase();
 			console.log("keyToMatch:"+keyToMatch);
 			console.log("if check:"+(keyToMatch === "next"));
-			$("#next").hide();
-			$("#next").removeData("targetUrl");
-			$("#prev").hide();
-			$("#prev").removeData("targetUrl");
-			$("#first").hide();
-			$("#first").removeData("targetUrl");
-			$("#last").hide();
-			$("#last").removeData("targetUrl");
-			switch(keyToMatch) {
+			
+			
+			if(keyToMatch === "next") {
+				console.log("**entering next");
+				$("#next").show();
+				$("#next").data("targetUrl",parsedLinks[key]);
+			}
+			if(keyToMatch === "prev") {
+				console.log("**entering prev");
+				$("#prev").show();
+				console.log("**prev shown");
+				$("#prev").data("targetUrl",parsedLinks[key]);
+			}
+			if(keyToMatch === "first") {
+				console.log("**entering first");
+				$("#first").show();
+				$("#first").data("targetUrl",parsedLinks[key]);
+			}
+			if(keyToMatch === "last"){
+				console.log("**entering last");
+				$("#last").show();
+				$("#last").data("targetUrl",parsedLinks[key]);
+			}
+			/*switch(keyToMatch) {
 				case "next":
 					console.log("**entering next");
 					$("#next").show();
@@ -217,7 +274,7 @@ function configurePagingOptions(linkheader) {
 					break;	
 				default:
 					break;
-			}
+			} */
 			console.log("parsedLink:"+parsedLinks[key]);
 		}
 	}
@@ -226,6 +283,7 @@ function configurePagingOptions(linkheader) {
 function fetchBlogComments(blogId,sortorder){
 	//remove dynamically created contents
 	clearExtraCommentDivs();
+	
 	$.ajax({
 		url : 'rest/blogger/blogs/'+blogId+'/comments',
 		type : 'get',
@@ -291,9 +349,11 @@ function fetchBlogComments(blogId,sortorder){
 			console.log("error callback :"+jqXHR);
 			console.log("error callback:"+textStatus);
 			console.log("error callback:"+errorThrown);
+			//showErrorScreen("No content Found");
 		},
 		 complete : function( jqXHR, textStatus ) {
 			console.log("complete callback"); 
+			$("#commentInput").val("");
 		}
 	});
 } 
@@ -321,12 +381,7 @@ function parse_link_header(header) {
 
 function showNewBlogScreen(makeVisible){
 	if(makeVisible) {
-		$("#loginScreen").hide();
-		$("#custom-search-input").hide();
-		$("#loggedInOptions").hide();
-		$("#homeScreenBody").hide();
-		showBlogAndCommentsScreen(false);
-		
+		hideAllScreens();
 		$("#newBlogScreen").show();
 	} else {
 		$("#newBlogScreen").hide();
@@ -335,6 +390,7 @@ function showNewBlogScreen(makeVisible){
 
 function showBlogAndCommentsScreen(makeVisible) {
 	console.log("showBlogAndCommentsScreen enter");
+	hideAllScreens();
 	if(makeVisible) {
 		var blogData = $("#selectedPost").data("blogData");
 		$("#homeScreenBody").hide();
@@ -368,8 +424,6 @@ function showBlogAndCommentsScreen(makeVisible) {
 		$("#loginToComment").hide();
 		$("#addCommentOption").hide();
 		$("#commentDetails").hide();
-		
-		
 	}
 	
 }
@@ -381,37 +435,38 @@ $(document).ready(function() {
 	configureMenuBarOptions("loggedOut");
 	fetchAllBlogs();
 	$("#homeScreenBody").show();
+	
+	$("#next").hide();	
+	$("#prev").hide();
+	$("#first").hide();	
+	$("#last").hide();
 	//showHSLoggedOutOptions(true);
 	//$('#commentOptionspost0').click(showBlogAndCommentsScreen(true));
 	$("#commentOptionspost0,#commentOptionspost1,#commentOptionspost2").click(function(e) {
 		var blogData = $(this).data("blogData");
 		console.log("Inside click attr blogData:"+blogData);
 		console.log("Inside click attr blogData.title:"+blogData.title);
-		$("#loginScreen").hide();
-		showHSLoggedInOptions(false);
-		showHSLoggedOutOptions(false);
+		hideAllScreens();
 		$("#selectedPost").data("blogData",blogData);
 		showBlogAndCommentsScreen(true);
 	});
 		
 	$("#loginBtn").click(function(e) {
-		showHSLoggedInOptions(false);
-		showHSLoggedOutOptions(false);
+		hideAllScreens();
 		configureMenuBarOptions("login");
 		console.log("triggering reset");
 		$('#loginForm').trigger("reset");
 		$("#loginScreen").show();
 	});
 	$("#signUp").click(function(e) {
-		$("#loginScreen").hide();
-		showHSLoggedInOptions(false);
-		showHSLoggedOutOptions(false);
+		hideAllScreens();
 		$("#signUpScreen").show();
 	});
 	
 	
 	
 	$("#updateProfileBtn").click(function(e) {
+		hideAllScreens();
 		var userId = $("#updateProfileBtn").data("userData");
 		console.log("profile userid :"+userId);
 		$.ajax({
@@ -422,10 +477,10 @@ $(document).ready(function() {
 			dataType : 'json', 
 			success : function(data,textStatus, jqXHR) { 
 				console.log("update profile success callback");
-				$("#signUpScreen").hide();
+				/*$("#signUpScreen").hide();
 				showHSLoggedInOptions(false);
 				showHSLoggedOutOptions(false);
-				$("#loginScreen").hide();
+				$("#loginScreen").hide();*/
 				console.log("data.firstName :"+data.firstName);
 				console.log("data.lastName :"+data.lastName);
 				console.log("data.nickName :"+data.nickName);
@@ -440,6 +495,7 @@ $(document).ready(function() {
 				console.log("error callback :"+jqXHR);
 				console.log("error callback:"+textStatus);
 				console.log("error callback:"+errorThrown);
+				showErrorScreen("Unexpected Error");
 			},
 			 complete : function( jqXHR, textStatus ) {
 				console.log("complete callback"); 
@@ -494,8 +550,7 @@ $(document).ready(function() {
 	*/	
 	
 	$("#saveSignUpDetailsBtn").click(function() {
-		$("#loginScreen").hide();
-		$("#signUpScreen").hide();
+		hideAllScreens();
 
 		var userId = $("#userid").val();
 		console.log("userId:"+userId);
@@ -550,6 +605,7 @@ $(document).ready(function() {
 				console.log("error callback :"+jqXHR);
 				console.log("error callback:"+textStatus);
 				console.log("error callback:"+errorThrown);
+				showErrorScreen("Unexpected error");
 			},
 			 complete : function( jqXHR, textStatus ) {
 				console.log("complete callback"); 
@@ -561,7 +617,7 @@ $(document).ready(function() {
 	$("#loginForm").submit(function(e) {
 		console.log("form submitted **");
 		console.log("form data 0:"+$(this).serializeArray());
-		
+		hideAllScreens();
 		console.log("form data 1:"+$(this).serialize());
 		console.log("form data 2:"+$('form').serialize());
 		var signInUsername = $('#loginForm').find('input[name="userId"]').val();
@@ -606,6 +662,7 @@ $(document).ready(function() {
 					console.log("error callback :"+jqXHR);
 					console.log("error callback:"+textStatus);
 					console.log("error callback:"+errorThrown);
+					showErrorScreen("Unexpected error");
 			   },
 			   complete : function( jqXHR, textStatus ) {
 					console.log("complete callback");
@@ -619,18 +676,17 @@ $(document).ready(function() {
 	$("#logoutBtn").click(function(e) {
 			console.log("Logging out in progress")
 			window.sessionStorage.clear();
-			showHSLoggedInOptions(false);
+			hideAllScreens();
 			configureMenuBarOptions("loggedOut");
-			$("#homeScreenBody").show();
+			
+			//$("#homeScreenBody").show();
 			fetchAllBlogs();
 			
 			//showHSLoggedOutOptions(true);
 	});
 	
 	$("#saveProfileBtn").click(function() {
-		$("#loginScreen").hide();
-		$("#signUpScreen").hide();
-
+		hideAllScreens();
 		
 		var passwordStr = $("#updatedpassword").val();
 		console.log("passwordStr:"+passwordStr);
@@ -665,6 +721,7 @@ $(document).ready(function() {
 				console.log("error callback :"+jqXHR);
 				console.log("error callback:"+textStatus);
 				console.log("error callback:"+errorThrown);
+				showErrorScreen("Unexpected error");
 			},
 			 complete : function( jqXHR, textStatus ) {
 				console.log("complete callback"); 
@@ -676,8 +733,7 @@ $(document).ready(function() {
 	
 	$("#loginToComment").click(function(e) {
 		console.log("login to comment- showing login page");
-		showHSLoggedOutOptions(false);
-		showBlogAndCommentsScreen(false);
+		hideAllScreens();
 		window.sessionStorage.setItem("prevAction","addComment");
 		configureMenuBarOptions("login");
 		$('#loginForm').trigger("reset");
@@ -685,11 +741,7 @@ $(document).ready(function() {
 	});
 	
 	$("#newBlogBtn_loggedOut").click(function(e) {
-		
-		console.log("create new blog 1");
-		showHSLoggedInOptions(false);
-		console.log("create new blog 2");
-		showHSLoggedOutOptions(false);
+		hideAllScreens();
 		window.sessionStorage.setItem("prevAction","newBlog");
 		configureMenuBarOptions("login");
 		$('#loginForm').trigger("reset");
@@ -706,13 +758,12 @@ $(document).ready(function() {
 	});
 	
 	$("#newBlogBtn_loggedIn").click(function(e) {
-		showHSLoggedInOptions(false);
+		hideAllScreens();
 		showNewBlogScreen(true);
 	});
 	
 	$("#submitNewBlogbtn").click(function() {
-		showNewBlogScreen(false);
-		
+		hideAllScreens();
 		var blogTitle = $("#newBlogTitle").val();
 		console.log("newBlogTitle:"+blogTitle);
 		var blogDescription = $("#blogDescriptionIInput").val();
@@ -745,6 +796,7 @@ $(document).ready(function() {
 				console.log("error callback :"+jqXHR);
 				console.log("error callback:"+textStatus);
 				console.log("error callback:"+errorThrown);
+				showErrorScreen("Unexpected error");
 			},
 			 complete : function( jqXHR, textStatus ) {
 				console.log("complete callback"); 
@@ -754,6 +806,7 @@ $(document).ready(function() {
 	});
 	
 	$("#submitCommentbtn").click(function() {
+		hideAllScreens();
 		var blogId = $("#addCommentOption").data("blogId");
 		console.log(" commentInput blogId:"+blogId);
 		var commentDescription = $("#commentInput").val();
@@ -779,6 +832,7 @@ $(document).ready(function() {
 				console.log("error callback :"+jqXHR);
 				console.log("error callback:"+textStatus);
 				console.log("error callback:"+errorThrown);
+				showErrorScreen("Unexpected error");
 			},
 			 complete : function( jqXHR, textStatus ) {
 				console.log("complete callback"); 
@@ -789,12 +843,24 @@ $(document).ready(function() {
 	
 	
 	$("#next,#prev,#first,#last").click(function() {
+		hideAllScreens();
 		var targetUrl = $(this).data("targetUrl");
 		console.log("targetUrl in pagingOptions click :"+targetUrl);
+		var userfilter;
+		
+		userPref = $('#myblogsFilter').val();
+		console.log("userpref :"+userPref);
+		if(window.sessionStorage.getItem('accessToken') != null && userPref === "My Blogs"){
+			console.log("applying user filter");
+			userfilter = $("#myblogsFilter").data("userData");
+		}
+		var searchStr = $("#searchBtn").data("searchStr");
+		console.log("search String in next:"+searchStr);
 		$.ajax({
 			url : targetUrl,
 			type : 'get',
 			contentType: "application/json; charset=utf-8",
+			data : {"searchStr":searchStr,"userFilter":userfilter},
 			dataType : 'json', 
 			success : function(data,textStatus, jqXHR) { 
 				console.log("next success callback");
@@ -806,6 +872,7 @@ $(document).ready(function() {
 				console.log("error callback :"+jqXHR);
 				console.log("error callback:"+textStatus);
 				console.log("error callback:"+errorThrown);
+				showErrorScreen("Unexpected error");
 			},
 			 complete : function( jqXHR, textStatus ) {
 				console.log("complete callback"); 
@@ -815,12 +882,13 @@ $(document).ready(function() {
 	});
 	
 	$("#searchBtn").click(function(e) {
+		hideAllScreens();
 		var searchStr = $("#searchInput").val();
 		console.log("Searched for :"+searchStr);
 		fetchAllBlogs(searchStr);
 	
 	});
-	$('.dropdown-menu a').on('click', function(){    
+	/*$('.dropdown-menu a').on('click', function(){    
 		$('.dropdown-toggle').html($(this).html() + '<span class="caret"></span>');  
 		console.log("Selected val :"+$(this).text())
 		var selectedOption = $(this).text();
@@ -836,10 +904,11 @@ $(document).ready(function() {
 			default:
 				break;
 		}
-	});
+	});*/
 	
 	$(".navbar-brand").click(function(e) {
 		console.log("home button pressed");
+		hideAllScreens();
 		var userId = $("#myblogsFilter").data("userData");
 		console.log("Logged in user :"+userId);
 		if(window.sessionStorage.getItem('accessToken') != null){
@@ -855,6 +924,25 @@ $(document).ready(function() {
 			
 		}
 	
+	});
+	
+	$('#myblogsFilter').change(function(){ 
+		
+		var selectedOption = $(this).val();
+		console.log("myblogsFilter selectedOption:"+selectedOption);
+		
+		var userId = $("#myblogsFilter").data("userData");
+		console.log("myblogsFilter Logged in user :"+userId);
+		switch(selectedOption){
+			case "My Blogs":
+				fetchAllBlogs(null,userId);
+				break;
+			case "All Blogs":
+				fetchAllBlogs();
+				break;
+			default:
+				break;
+		}
 	});
 	
 	$('#commentSortingOrder').change(function(){ 
@@ -884,6 +972,7 @@ $(document).ready(function() {
 	
 	$("#loadMoreComments").click(function(e) {
 		console.log("loading more comments**");
+		
 		var targetUrl = $(this).data("targetUrl");
 		console.log("targetUrl in comment pagingOptions click :"+targetUrl);
 		var loadedCommentCount = $("#loadMoreComments").data("loadedCommentCount");
@@ -939,6 +1028,7 @@ $(document).ready(function() {
 				console.log("error callback :"+jqXHR);
 				console.log("error callback:"+textStatus);
 				console.log("error callback:"+errorThrown);
+				showErrorScreen("Unexpected error");
 			},
 			 complete : function( jqXHR, textStatus ) {
 				console.log("complete callback"); 

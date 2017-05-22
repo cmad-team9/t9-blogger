@@ -62,15 +62,20 @@
 				
 				<ul class="nav navbar-nav navbar-right">
 					
-					<li class="dropdown" id="myblogsFilter">
+					<!--<li class="dropdown" id="myblogsFilter">
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#">My Blogs
 						<span class="caret"></span></a>
 						<ul class="dropdown-menu">
 						  <li><a href="#">My Blogs</a></li>
 						  <li><a href="#">All Blogs</a></li>
 						</ul>
+					</li> -->
+					<li>
+					<select class="bootstrap-select" style="margin-top:15px;font-size:15px" id="myblogsFilter">
+						<option value="My Blogs" selected="selected">My Blogs</option>
+						<option value="All Blogs">All Blogs</option>
+					</select>
 					</li>
-					
 					<li><a href="#"id="newBlogBtn_loggedIn">Create Blog</a></li>
 					<li><a href="#"id="newBlogBtn_loggedOut">Create Blog</a></li>
 					<li><a href="#"id="updateProfileBtn">Update Profile</a></li>
@@ -127,18 +132,15 @@
 						<br>
 					</div>
 					<div id = "pagingOptions">
-						<div id="first">
-							<a href="#"> First Page| </a>
-						</div>
-						<div id="prev">
-							<a href="#" > Previous Page| </a>
-						</div>
-						<div  id="next">
-							<a href="#"> Next Page| </a>
-						</div>
-						<div id="last">
-							<a href="#" > Last Page </a>
-						</div>
+						
+							<a href="#" id="first" style="display:inline;"> First Page| </a>
+						
+							<a href="#" id="prev" style="display:inline;"> Previous Page| </a>
+						
+							<a href="#" id="next" style="display:inline;"> Next Page| </a>
+						
+							<a href="#" id="last" style="display:inline;"> Last Page </a>
+						
 					</div>
 				</div>
 			</div>
@@ -227,6 +229,12 @@
 					<textarea rows="10" class="form-control" id="blogDescriptionIInput" placeholder="Blog Description"></textarea>
 				</div>		  
 				<button type="submit" id="submitNewBlogbtn">Submit</button>	
+			</div>
+			
+			<div id = "errorScreen">
+				<p id ="errorMsg">
+						
+				<p>	
 			</div>
 			
 			<div id = "blogAndCommentsScreen">

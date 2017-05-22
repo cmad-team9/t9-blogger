@@ -1,5 +1,6 @@
 package com.cisco.cmadt9blogger.data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -57,21 +58,24 @@ public class JPABlogDAO extends JPABloggerDAO implements BlogDAO {
 		System.out.println("JPABlogDAO SearchStr :"+searchStr);
 		System.out.println("JPABlogDAO userFilter :"+userFilter);
 		System.out.println("JPABlogDAO with predicates");
-		Predicate searchPr = null;
+		List<Predicate> predicates = new ArrayList<Predicate>();
+		//Predicate searchPr = null;
+		//Predicate userPr = null;
 		if(searchStr != null && searchStr.trim() != "")
 		{
 			System.out.println("JPABlogDAO in searchStr");
-			searchPr = builder.like(builder.lower(blog.get("title")), "%"+searchStr.toLowerCase()+"%");
+			predicates.add(builder.like(builder.lower(blog.get("title")), "%"+searchStr.toLowerCase()+"%"));
 			//criteriaQuery.where(builder.like(builder.lower(blog.get("title")), "%"+searchStr.toLowerCase()+"%"));
-			criteriaQuery.where(builder.and(searchPr/*,userPr*/));
+			//criteriaQuery.where(builder.and(searchPr/*,userPr*/));
 		}
 		
 		/*******************user filter**********************/
 		if(userFilter != null  && userFilter.trim() != ""){
 			System.out.println("JPABlogDAO in userFilter:"+userFilter);
-			Predicate userPr =  builder.like(builder.lower(blog.get("user").get("userId")), userFilter);
-			criteriaQuery.where(builder.and(searchPr,userPr));
+			predicates.add(builder.like(builder.lower(blog.get("user").get("userId")), userFilter));
+			//criteriaQuery.where(builder.and(userPr,searchPr));
 		}
+		select.where(predicates.toArray(new Predicate[]{}));
 		//Predicate userPr =  builder.like(builder.lower(blog.get("user").get("userId")), "jul");
 		//criteriaQuery.where(builder.and(/*searchPr,*/userPr));
 		/****************************************************/
@@ -83,9 +87,9 @@ public class JPABlogDAO extends JPABloggerDAO implements BlogDAO {
 //			System.out.println("Current page: " + typedQuery.getResultList());
 //			pageNumber += pageSize;
 //		}
-		if(offset != 0){
-			offset = offset + pageSize -1;
-		}
+		//if(offset != 0){
+			offset = offset * pageSize;
+		//}
 		typedQuery.setFirstResult(offset);
 		typedQuery.setMaxResults(pageSize);
 		System.out.println("Current page: " + typedQuery.getResultList());
@@ -158,5 +162,4 @@ public class JPABlogDAO extends JPABloggerDAO implements BlogDAO {
 		em.getTransaction().commit();
 		em.close();
 	}
-
 }

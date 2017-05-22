@@ -162,7 +162,7 @@ public class T9Blogger implements Blogger{
 	@Override
 	public long getCommentCount(int blogId) throws BloggerException {
 		// TODO Auto-generated method stub
-		return commentDAO.getCommentCount();
+		return commentDAO.getCommentCount(blogId);
 	}
 
 	@Override
