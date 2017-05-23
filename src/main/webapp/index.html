@@ -13,37 +13,6 @@
 </head>
 <body>
 	<div class="container-fluid">
-	<!--	<h1>T9Blogger V0.3</h1>
-		<hr />
-		<div id='homeScreen'>
-			<div class="row">
-				<div class="col-sm-3">
-					<div id="custom-search-input">
-						<div class="input-group col-md-12">
-							<input type="text" class="form-control input-lg" placeholder="Search" id ="searchInput" />
-							<span class="input-group-btn">
-								<button class="btn btn-info btn-lg" type="button" id ="searchBtn">
-									<i class="glyphicon glyphicon-search"></i>
-								</button>
-							</span>
-						</div>
-					</div>
-				</div>
-				<div class="col-sm-5">
-					
-				</div>
-				<div class="col-sm-4">
-					<div class="btn-group" id="homeOptions_default">
-						<button type="button" class="btn btn-primary" id="newBlogBtn_loggedOut">Create new Blog</button>
-						<button type="button" class="btn btn-primary" id="loginBtn">Login</button>
-					</div>
-					<div class="btn-group" id="loggedInOptions">
-						<button type="button" class="btn btn-primary" id="newBlogBtn_loggedIn">Create new Blog</button>
-						<button type="button" class="btn btn-primary" id="updateProfileBtn">Update Profile</button>
-						<button type="button" class="btn btn-primary" id="logoutBtn">Logout</button>
-					</div>
-				</div>
-			</div> -->
 			<nav class="navbar navbar-inverse navbar-fixed-top">
 			  <div class="container-fluid">
 				<div class="navbar-header">
@@ -62,14 +31,6 @@
 				
 				<ul class="nav navbar-nav navbar-right">
 					
-					<!--<li class="dropdown" id="myblogsFilter">
-						<a class="dropdown-toggle" data-toggle="dropdown" href="#">My Blogs
-						<span class="caret"></span></a>
-						<ul class="dropdown-menu">
-						  <li><a href="#">My Blogs</a></li>
-						  <li><a href="#">All Blogs</a></li>
-						</ul>
-					</li> -->
 					<li>
 					<select class="bootstrap-select" style="margin-top:15px;font-size:15px" id="myblogsFilter">
 						<option value="My Blogs" selected="selected">My Blogs</option>
@@ -99,8 +60,6 @@
 									<time id = "post0time"></time>
 							</div>
 							<a href="#" style="font-size: 10px;color:blue;"id = "commentOptionspost0"> </a>
-							<!--	<a href="#" style="font-size: 10px; margin-left:50%;"id="addComment"> Add Comment </a> -->
-							
 						</div>
 						<br>
 						<br>
@@ -132,15 +91,10 @@
 						<br>
 					</div>
 					<div id = "pagingOptions">
-						
 							<a href="#" id="first" style="display:inline;"> First Page| </a>
-						
 							<a href="#" id="prev" style="display:inline;"> Previous Page| </a>
-						
 							<a href="#" id="next" style="display:inline;"> Next Page| </a>
-						
 							<a href="#" id="last" style="display:inline;"> Last Page </a>
-						
 					</div>
 				</div>
 			</div>
@@ -266,44 +220,8 @@
 					</select>
 					<hr />
 					<div id ="commentPosts">
-					<!--	<div id = "comment0">
-							<p id ="comment0Content">
-								COMMENT 0 CONTENT
-							<p>
-							<div id ="comment0meta" class='commentmeta'>Posted by 
-								<span id = "comment0author">xx</span> 
-								<time id = "comment0time">XXXX-XX-XX</time>
-							</div>
-							<hr />
-						</div>
-						
-						
-						<div id = "comment1">
-							<p id ="comment1Content">
-								COMMENT 1 CONTENT
-							<p>
-							<div id ="comment1meta" class='commentmeta'>Posted by 
-								<span id = "comment1author">xx</span> 
-								<time id = "comment1time">XXXX-XX-XX</time>
-							</div>
-							
-							<hr />
-						</div>
-						
-						
-						<div id = "comment2">
-							<p id ="comment2Content">
-								COMMENT 2 CONTENT
-							<p>
-							<div id ="comment2meta" class='commentmeta'>Posted by 
-								<span id = "comment2author">xx</span> 
-								<time id = "comment2time">XXXX-XX-XX</time>
-							</div>
-							<hr />
-						</div>  -->
-						
-					</div>
 					
+					</div>
 					<a href="#" id="loadMoreComments">Load More Comments</a> 
 				</div>
 			</div>

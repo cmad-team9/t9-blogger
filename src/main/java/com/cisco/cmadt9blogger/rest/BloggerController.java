@@ -3,7 +3,6 @@ package com.cisco.cmadt9blogger.rest;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.HttpHeaders.LINK;
 
-
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -32,58 +31,40 @@ import com.cisco.cmadt9blogger.api.User;
 import com.cisco.cmadt9blogger.service.T9Blogger;
 
 
-
-
 @Path("/blogger")
 public class BloggerController {
 
-	private Blogger blogger = new T9Blogger();
-	
+	private Blogger blogger = new T9Blogger();	
 	@Context
 	private UriInfo uriInfo;
-	
+
 	@POST
 	@Path("/user")
 	@Consumes(MediaType.APPLICATION_JSON) 
-	public Response signupNewUser(
-			User user) {
-		System.out.println("Adding user rest");
-		System.out.println("REST Userid :"+user.getUserId());
-		System.out.println("REST password :"+user.getPassword());
-		System.out.println("REST Firstname :"+user.getFirstName());
-		System.out.println("REST Secondname :"+user.getLastName());
-		System.out.println("REST Nickname :"+user.getNickName());
+	public Response signupNewUser(User user) {
+		System.out.println("BloggerController signupNewUser Userid :"+user.getUserId());
 		String token = blogger.signupNewUser(user);
-		System.out.println("REST sign up token :"+token);
-		//return Response.ok().build();
+		System.out.println("BloggerController signupNewUser token :"+token);
 		return Response.ok().header(AUTHORIZATION, "Bearer " + token).build();
 	}
-	
+
 	@PUT
 	@Path("/user")
 	@Consumes(MediaType.APPLICATION_JSON) 
 	@RequireJWTToken
-	public Response updateUser(@HeaderParam("userId") String userId,
-			User user) {
-		System.out.println("updateUser userId:"+userId);
-		System.out.println("updateUser password:"+user.getPassword());
-		System.out.println("updateUser firstname:"+user.getFirstName());
-		System.out.println("updateUser lastname:"+user.getLastName());
-		System.out.println("updateUser nickname:"+user.getNickName());
+	public Response updateUser(@HeaderParam("userId") String userId,User user) {
+		System.out.println("BloggerController updateUser userId:"+userId);
 		user.setUserId(userId);
 		blogger.updateUserProfile(user);
 		return Response.ok().build();
-		
 	}
-	
+
 	@GET
 	@Path("/user/{userId}")
 	@Produces(MediaType.APPLICATION_JSON) 
 	@RequireJWTToken
-	//TODO Check password
-	public Response getUserDetails(
-			@PathParam("userId")String userId) {
-		System.out.println("*************PATH CALLED");
+	public Response getUserDetails(@PathParam("userId")String userId) {
+		System.out.println("BloggerController getUserDetails userId:"+userId);
 		User user = blogger.getUserDetails(userId);
 		return Response.ok().entity(user).build();
 	}
@@ -91,127 +72,93 @@ public class BloggerController {
 	@POST
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response loginUser(@FormParam("userId") String userId,
-			@FormParam("password") String password) {
-		System.out.println("*******login userId :"+userId);
-		System.out.println("*******login password :"+password);
-		System.out.println("URIINFO REST:"+uriInfo);
+	public Response loginUser(@FormParam("userId") String userId,@FormParam("password") String password) {
+		System.out.println("BloggerController loginUser userId :"+userId);
 		String token = blogger.loginUser(userId,password);
 		return Response.ok().header(AUTHORIZATION, "Bearer " + token).build();
-		//return Response.ok().header(AUTHORIZATION,token).build();
 	}
-	
+
 	@POST
 	@Path("/blogs")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@RequireJWTToken
 	public Response addBlog(@HeaderParam("userId") String userId,Blog blog) {
-		// TODO recheck about user data
-		System.out.println("addBlog userId :"+userId);
+		System.out.println("BloggerController addBlog userId :"+userId);
 		User user = blogger.getUserDetails(userId);
-		System.out.println("addBlog user :"+user);
-		System.out.println("addBlog blog title :"+blog.getTitle());
-		System.out.println("addBlog blog description :"+blog.getDescription());
+		System.out.println("BloggerController addBlog blog title :"+blog.getTitle());
 		blog.setUser(user);
 		blogger.addBlog(blog);
 		return Response.ok().entity(blog).build();
 	}
-	
+
 	@GET
 	@Path("/blogs/{blogId}")
 	@Produces(MediaType.APPLICATION_JSON) 
-	public Response getBlog(
-			@PathParam("blogId")int blogId) {
-		System.out.println("*************PATH CALLED");
+	public Response getBlog(@PathParam("blogId")int blogId) {
+		System.out.println("BloggerController getBlog blogId:"+blogId); 
 		Blog blog = blogger.getBlog(blogId);
 		return Response.ok().entity(blog).build();
 	}
-	//TODO
+
 	@DELETE
 	@Path("/blogs/{blogId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@RequireJWTToken
-	public Response deleteBlog(
-			@PathParam("blogId")int blogId) {
-		System.out.println("*************PATH CALLED");
-		//Blog blog = blogger.deleteBlog(blogId);
+	public Response deleteBlog(@PathParam("blogId")int blogId) {
+		System.out.println("BloggerController deleteBlog blogId:"+blogId); 
+		blogger.deleteBlog(blogId);
 		return Response.ok().build();
 	}
-	
+
 	@GET
 	@Path("/blogs")
 	@Produces(MediaType.APPLICATION_JSON) 
 	public Response getAllBlogs(@QueryParam("offset")@DefaultValue("0") int offset,
-			                    @QueryParam("pageSize")@DefaultValue("5")int pageSize,
-			                    @QueryParam("searchStr")String searchStr,	
-			                    @QueryParam("userFilter")String userFilter,		
-			                    @Context UriInfo uriInfo) {
-		System.out.println("*************All Blogs REST__");
-		//List<Blog> blogList = blogger.getAllBlogs();
-		System.out.println("offset:"+offset);
-		System.out.println("pageSize:"+pageSize);
-		System.out.println("uriInfo:"+uriInfo);
-		System.out.println("searchStr:"+searchStr);
-		System.out.println("userFilter:"+userFilter);
-		System.out.println("uriInfo rri:"+uriInfo.getRequestUri());
+			@QueryParam("pageSize")@DefaultValue("5") int pageSize,
+			@QueryParam("searchStr")String searchStr,	
+			@QueryParam("userFilter")String userFilter,		
+			@Context UriInfo uriInfo) {
+		System.out.println("BloggerController getAllBlogs offset:"+offset+" pageSize:"+pageSize);
+		System.out.println("BloggerController getAllBlogs searchStr:"+searchStr+" userFilter:"+userFilter);
+		System.out.println("uriInfo uri:"+uriInfo.getRequestUri());
 		UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
-		 GenericEntity<List<Blog>> blogList = new GenericEntity<List<Blog>>(blogger.getAllBlogs(offset,pageSize,searchStr,userFilter)) {};
-		 long totalCount = blogger.getBlogCount();
-		 System.out.println("totalCount:"+totalCount);
-		 long resultCount = blogger.getBlogSearchResultCount(searchStr,userFilter);
-		 System.out.println("resultCount:"+resultCount);
-		 if(searchStr != null) {
-			 totalCount = resultCount;
-			 System.out.println("Setting totalcount as resultCount");
-		 }
-		 System.out.println("link Header :"+PaginationUtil.getLinkHeaders(uriBuilder, offset, totalCount, pageSize));
+		GenericEntity<List<Blog>> blogList = new GenericEntity<List<Blog>>(blogger.getAllBlogs(offset,pageSize,searchStr,userFilter)) {};
+		long totalCount = blogger.getBlogCount(searchStr,userFilter);
+		System.out.println("BloggerController getAllBlogs totalCount:"+totalCount);
+		System.out.println("BloggerController getAllBlogs link Header :"+PaginationUtil.getLinkHeaders(uriBuilder, offset, totalCount, pageSize));
 		return Response.ok().entity(blogList).header(LINK, PaginationUtil.getLinkHeaders(uriBuilder, offset, totalCount, pageSize)).build();
 	}
-	
+
 	@POST
 	@Path("/blogs/{blogId}/comments")
 	@Consumes(MediaType.APPLICATION_JSON) 
 	@RequireJWTToken
 	public Response addBlogComment(@HeaderParam("userId") String userId,
-			@PathParam("blogId")int blogId,BlogComment comment) {
-		System.out.println("Restful API Comment ");
-		// TODO Find a better way rather than reading the userdetails and blog details
+			@PathParam("blogId")int blogId,
+			BlogComment comment) {
+		System.out.println("BloggerController addBlogComment userId:"+userId+" blogId:"+blogId);
 		comment.setCommentor(blogger.getUserDetails(userId));
 		comment.setBlog(blogger.getBlog(blogId));
 		blogger.addComment(comment);
 		return Response.ok().build();
 	}
-	
+
 	@GET
 	@Path("/blogs/{blogId}/comments")
 	@Produces(MediaType.APPLICATION_JSON) 
-	public Response getAllComments(@PathParam("blogId")int blogId,
-								   @QueryParam("offset")@DefaultValue("0") int offset,
-            					   @QueryParam("pageSize")@DefaultValue("5")int pageSize,
-								   @QueryParam("sortOrder")String sortOrder,
-								   @Context UriInfo uriInfo) {
-		System.out.println("*************All Comments REST");
-		//List<BlogComment> blogList = blogger.getAllComments(blogId);
+	public Response getAllComments(@PathParam("blogId") int blogId,
+			@QueryParam("offset")@DefaultValue("0") int offset,
+			@QueryParam("pageSize")@DefaultValue("5") int pageSize,
+			@QueryParam("sortOrder") String sortOrder,
+			@Context UriInfo uriInfo) {
+
 		UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder();
-		System.out.println("REST getAllComments blogId:"+blogId);
-		 long totalCommentCount = blogger.getCommentCount(blogId);
-		 System.out.println("getCommentCount :"+totalCommentCount);
-		 GenericEntity<List<BlogComment>> commentList = new GenericEntity<List<BlogComment>>(blogger.getAllComments(blogId, offset, pageSize,sortOrder)) {};
-		 System.out.println("link Header :"+PaginationUtil.getLinkHeaders(uriBuilder, offset, totalCommentCount, pageSize));
+		System.out.println("BloggerController getAllComments blogId:"+blogId+" offset:"+offset+" pageSize:"+pageSize);
+		System.out.println("BloggerController getAllComments sortOrder:"+sortOrder);
+		long totalCommentCount = blogger.getCommentCount(blogId);
+		System.out.println("BloggerController getAllComments getCommentCount :"+totalCommentCount);
+		GenericEntity<List<BlogComment>> commentList = new GenericEntity<List<BlogComment>>(blogger.getAllComments(blogId, offset, pageSize,sortOrder)) {};
+		System.out.println("BloggerController getAllComments link Header :"+PaginationUtil.getLinkHeaders(uriBuilder, offset, totalCommentCount, pageSize));
 		return Response.ok().entity(commentList).header(LINK, PaginationUtil.getLinkHeaders(uriBuilder, offset, totalCommentCount, pageSize)).build();
 	}
-
-	@GET
-	@Path("/noauth")
-	public Response echo(@QueryParam("message") String message) {
-		return Response.ok().entity(message == null ? "no message" : message).build();
-	}
-
-	@GET
-	@Path("/auth")
-	@RequireJWTToken
-	public Response echoWithJWTToken(@QueryParam("message") String message) {
-		return Response.ok().entity(message == null ? "no message" : message).build();
-	}
-
 }

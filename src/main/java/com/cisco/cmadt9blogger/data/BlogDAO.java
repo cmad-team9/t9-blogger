@@ -8,8 +8,6 @@ public interface BlogDAO {
 	void createBlog(Blog blog);
 	Blog readBlog(int blogId);
 	List<Blog> getAllBlogs(int offset,int pageSize,String searchStr,String userFilter);
-	long getBlogCount();
-	long getBlogSearchResultCount(String searchStr,String userFilter);
+	long getBlogCount(String searchStr,String userFilter);
 	void deleteBlog(int blogId);
-
 }

@@ -8,7 +8,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.cisco.cmadt9blogger.api.Blog;
@@ -65,7 +64,7 @@ public class T9BloggerTest {
 		}
 		blogger.deleteUser("ninut");
 	}		
-	
+
 	@Test
 	public void loginUserTest(){
 		User user = new User();
@@ -82,13 +81,13 @@ public class T9BloggerTest {
 		}
 		blogger.deleteUser("ninut");
 	}
-	
+
 	@Test
 	public void getUserDetailsTest(){
 		User user = new User();
 		user.setUserId("ninut");
 		user.setPassword("ninut");
-		
+
 		try {
 			blogger.signupNewUser(user);
 			blogger.getUserDetails("ninut");
@@ -100,7 +99,7 @@ public class T9BloggerTest {
 		}
 		blogger.deleteUser("ninut");
 	}
-	
+
 	@Test
 	public void addAndReadBlogTest(){
 		Blog blog = new Blog();
@@ -119,7 +118,7 @@ public class T9BloggerTest {
 		}
 		blogger.deleteBlog(blogId);
 	}
-	
+
 	@Test
 	public void addAndReadCommentTest(){
 		Blog blog = new Blog();

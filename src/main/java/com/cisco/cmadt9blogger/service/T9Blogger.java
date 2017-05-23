@@ -88,8 +88,8 @@ public class T9Blogger implements Blogger{
 			throw new BlogNotFoundException();
 		return blogList;
 	}
-	
-	
+
+
 
 	@Override
 	public void updateUserProfile(User user) throws InvalidUserDetailsException, BloggerException {
@@ -119,15 +119,10 @@ public class T9Blogger implements Blogger{
 	}
 
 	private void authenticate(String userId, String password) {
-		// TODO Encrypt password
-		System.out.println("authenticate userId:"+userId);
-		System.out.println("authenticate password:"+password);
-		System.out.println("T9Blogger authenticate userDAO :"+userDao);
+		System.out.println("T9Blogger authenticate userId:"+userId);
 		User user = userDao.readUser(userId);
-		System.out.println("T9Blogger authenticate user :"+user);
 		String storedPassword = user.getPassword();
 		System.out.println("authenticate storedPassword:"+storedPassword);
-		System.out.println("authenticate password != storedPassword:"+(password != storedPassword));
 		System.out.println("authenticate password != storedPassword:"+password.equals(storedPassword));
 		if(!password.equals(storedPassword)){
 			throw new SecurityException("Invalid user/password");
@@ -154,20 +149,15 @@ public class T9Blogger implements Blogger{
 	}
 
 	@Override
-	public long getBlogCount() throws BloggerException {
+	public long getBlogCount(String searchStr,String userFilter) throws BloggerException {
 		// TODO 
-		return blogDao.getBlogCount();
+		return blogDao.getBlogCount(searchStr,userFilter);
 	}
 
 	@Override
 	public long getCommentCount(int blogId) throws BloggerException {
 		// TODO Auto-generated method stub
 		return commentDAO.getCommentCount(blogId);
-	}
-
-	@Override
-	public long getBlogSearchResultCount(String searchStr,String userFilter) throws BloggerException {
-		return blogDao.getBlogSearchResultCount(searchStr,userFilter);
 	}
 
 	@Override

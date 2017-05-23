@@ -26,10 +26,10 @@ public class BloggerExceptionMapper implements ExceptionMapper<Throwable> {
 			return Response.status(401).build();
 		}
 		else if(t instanceof UserAlreadyExistsException || t instanceof DuplicateBlogException){
-			return Response.status(409).build(); //TODO Needs review
+			return Response.status(409).build(); 
 		}
 		else if(t instanceof InvalidUserDetailsException || t instanceof InvalidBlogException){
-			return Response.status(400).build(); //TODO Needs review
+			return Response.status(400).build(); 
 		}
 		else {
 			return Response.status(500).build();
