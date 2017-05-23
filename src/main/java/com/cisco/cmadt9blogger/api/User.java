@@ -8,17 +8,15 @@ public class User {
 	//TODO - Make fields as Null/Not Null, Updatable or not, encrypted if needed
 	@Id	
 	private String userId;
-	//TODO Encrypt
 	private String password;
 	private String firstName;
 	private String lastName;
 	private String nickName;
 
-	
 	public User() {
 		super();
 	}
-	
+
 	public User(String userId, String password, String firstName, String lastName, String nickName) {
 		super();
 		this.userId = userId;
@@ -67,5 +65,5 @@ public class User {
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
 	}
-	
+
 }

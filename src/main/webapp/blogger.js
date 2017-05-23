@@ -1,32 +1,6 @@
-/*function showHSLoggedInOptions(makeVisible){
-	if(makeVisible) {
-		$("#custom-search-input").show();
-		$("#loggedInOptions").show();
-		$("#homeScreenBody").show();
-	} else {
-		$("#custom-search-input").hide();
-		$("#loggedInOptions").hide();
-		$("#homeScreenBody").hide();
-	}
-}
-	
-function showHSLoggedOutOptions(makeVisible) {
-	if(makeVisible) {
-		console.log("**showHSLoggedOutOptions**");
-		$("#custom-search-input").show();
-		$("#homeOptions_default").show();
-		$("#homeScreenBody").show();
-		fetchAllBlogs();
-	} else {
-		$("#custom-search-input").hide();
-		$("#homeOptions_default").hide();
-		$("#homeScreenBody").hide();
-	}
-	
-}*/
 
 function configureMenuBarOptions(screen){
-	console.log("configureMenuBarOptions");
+	console.log("configureMenuBarOptions :"+screen);
 	switch(screen){
 		case "login":
 			console.log("configureMenuBarOptions login");
@@ -61,8 +35,7 @@ function configureMenuBarOptions(screen){
 }
 	
 function fetchAllBlogs(searchStr,userfilter){
-	console.log("fetchAllBlogs searchStr:"+searchStr);
-	console.log("fetchAllBlogs userfilter:"+userfilter);
+	console.log("fetchAllBlogs searchStr:"+searchStr+" userfilter:"+userfilter);
 	if(searchStr != undefined && searchStr != null && searchStr.trim != "")
 	{
 		console.log("fetchAllBlogs storing searchStr"+searchStr);
@@ -80,21 +53,17 @@ function fetchAllBlogs(searchStr,userfilter){
 		dataType : 'json',
 		data : {"offset": "0","pageSize": "3","searchStr":searchStr,"userFilter":userfilter},
 		success : function(data,textStatus, jqXHR) { 
-			console.log("success callback");
-			console.log("Blog data:"+data);
-			console.log("new display func")
+			console.log("fetchAllBlogs success callback :"+data);
 			displayBlogs(data,textStatus, jqXHR);
 			
 			
 		},
 		error : function( jqXHR,textStatus, errorThrown ) {
-			console.log("error callback :"+jqXHR);
-			console.log("error callback:"+textStatus);
-			console.log("error callback:"+errorThrown);
+			console.log("fetchAllBlogs error callback :"+jqXHR+" textStatus:"+textStatus+" errorThrown:"+errorThrown);
 			showErrorScreen("No content Found");
 		},
 		 complete : function( jqXHR, textStatus ) {
-			console.log("complete callback"); 
+			console.log("fetchAllBlogs complete callback"); 
 			$("#searchInput").val("");
 			$("#newBlogTitle").val("");
 		    $("#blogDescriptionIInput").val("");
@@ -103,6 +72,7 @@ function fetchAllBlogs(searchStr,userfilter){
 } 
 
 function hideAllScreens() {
+	console.log("hideAllScreens"); 
 	$("#homeScreenBody").hide();
 	$("#loginScreen").hide();
 	$("#signUpScreen").hide();
@@ -116,7 +86,7 @@ function hideAllScreens() {
 }
 
 function showErrorScreen(errorMsg){
-	
+	console.log("showErrorScreen :"+errorMsg); 
 	hideAllScreens();
 	$("#errorMsg").text(errorMsg);
 	$("#errorScreen").show();
@@ -124,19 +94,17 @@ function showErrorScreen(errorMsg){
 }
 
 function displayBlogs(data,textStatus, jqXHR) {
-	
+	console.log("displayBlogs"); 
 	hideAllScreens();
 	for(i = 0;i < 3;i++){ 
 		if(i < data.length) {
-			console.log("i:"+i);
+			console.log("Blog loop idx :"+i);
 			$("#post"+i+"Heading").text(data[i].title);
 			console.log("Blog Title:"+data[i].title);
 			$("#post"+i+"Content").text(data[i].description);
 			console.log("Blog Content:"+data[i].description);
 			console.log("Blog id:"+data[i].blogId);
 			$("#commentOptionspost"+i).data("blogData",data[i]);
-			//$("#commentOptionspost"+i).attr("blogTitle",data[i].title);
-			//$("#commentOptionspost"+i).attr("blogDescription",data[i].blogDescription);
 			console.log("Comment data :"+($("#commentOptionspost"+i).data("blogData")));
 			console.log("Blog user:"+data[i].user);
 			console.log("Blog created time:"+data[i].postedDate);
@@ -145,7 +113,7 @@ function displayBlogs(data,textStatus, jqXHR) {
 			$("#post"+i+"author").text("Posted by "+data[i].user.userId);
 			$("#post"+i+"time").text($.format.prettyDate(data[i].postedDate));
 		}else {
-			console.log("CLEARING STALE DATA");
+			console.log("Clearing stale data");
 			$("#commentOptionspost"+i).text("");
 			$("#post"+i+"Heading").text("");
 			$("#post"+i+"Content").text("");
@@ -160,18 +128,16 @@ function displayBlogs(data,textStatus, jqXHR) {
 }
 
 function configureCommentPagingOptions(linkheader) {
-	console.log("**linkheader.length:"+linkheader.length);
+	console.log(" configureCommentPagingOptions linkheader.length:"+linkheader.length);
+	$("#loadMoreComments").hide();
+	$("#loadMoreComments").removeData("targetUrl");
 	if(linkheader.length != 0) {
 		var parsedLinks = parse_link_header(linkheader); 
 		console.log("Parsing linkheader :"+parsedLinks);
 		for (var key in parsedLinks) {
-			console.log("**Enterng loop:"+key);
-		 // if (parsedLinks.hasOwnProperty(key))
 			var keyToMatch = key.toLowerCase();
 			console.log("keyToMatch:"+keyToMatch);
-			console.log("if check:"+(keyToMatch === "next"));
-			$("#loadMoreComments").hide();
-			$("#loadMoreComments").removeData("targetUrl");
+			
 			if(keyToMatch === "next") {
 				console.log("Showing load more comments");
 				$("#loadMoreComments").show();
@@ -185,105 +151,62 @@ function configureCommentPagingOptions(linkheader) {
 }
 
 function clearExtraCommentDivs() {
-	console.log("Clearing additionally created divs");
+	console.log("clearExtraCommentDivs");
 	var totalCommentDivs = $("#loadMoreComments").data("loadedCommentCount");
 	console.log("totalCommentDivs :"+totalCommentDivs);
 	$(".extradivs").remove();
 	console.log("Total divs after removing extra :"+$("#commentPosts > div").length);
 	$("#loadMoreComments").data("loadedCommentCount",0);
-	/*if(totalCommentDivs > 3) {
-		//for(i = 3;i < totalCommentDivs;i++){
-			console.log("Removing comment"+i);
-			//$("#comment"+i).remove();
-				$(".extradivs").remove();
-			 //$("#commentPosts").closest('.extradivs').remove();
-			 console.log("****rr withot 4 loop**********");
-		//}
-		console.log("Total divs after removing extra :"+$("#commentPosts > div").length);
-		$("#loadMoreComments").data("loadedCommentCount",3);
-	}else{
-		console.log("No extra divs to clear");
-	}*/
-	
 }
 
 function configurePagingOptions(linkheader) {
-	
-	console.log("**linkheader.length:"+linkheader.length);
+	console.log("configurePagingOptions linkheader.length:"+linkheader.length);
+	$("#next").hide();
+	$("#next").removeData("targetUrl");
+	$("#prev").hide();
+	$("#prev").removeData("targetUrl");
+	$("#first").hide();
+	$("#first").removeData("targetUrl");
+	$("#last").hide();
+	$("#last").removeData("targetUrl");
 	if(linkheader.length != 0) {
 		var parsedLinks = parse_link_header(linkheader); 
 		console.log("--Parsing linkheader-- :"+parsedLinks);
-		$("#next").hide();
-		$("#next").removeData("targetUrl");
-		$("#prev").hide();
-		$("#prev").removeData("targetUrl");
-		$("#first").hide();
-		$("#first").removeData("targetUrl");
-		$("#last").hide();
-		$("#last").removeData("targetUrl");
+		
 		for (var key in parsedLinks) {
-			console.log("**Enterng loop:"+key);
-		 // if (parsedLinks.hasOwnProperty(key))
 			var keyToMatch = key.toLowerCase();
 			console.log("keyToMatch:"+keyToMatch);
-			console.log("if check:"+(keyToMatch === "next"));
-			
-			
 			if(keyToMatch === "next") {
-				console.log("**entering next");
+				console.log("Showing next");
 				$("#next").show();
 				$("#next").data("targetUrl",parsedLinks[key]);
 			}
 			if(keyToMatch === "prev") {
-				console.log("**entering prev");
+				console.log("Showing prev");
 				$("#prev").show();
-				console.log("**prev shown");
 				$("#prev").data("targetUrl",parsedLinks[key]);
 			}
 			if(keyToMatch === "first") {
-				console.log("**entering first");
+				console.log("Showing first");
 				$("#first").show();
 				$("#first").data("targetUrl",parsedLinks[key]);
 			}
 			if(keyToMatch === "last"){
-				console.log("**entering last");
+				console.log("Showing last");
 				$("#last").show();
 				$("#last").data("targetUrl",parsedLinks[key]);
 			}
-			/*switch(keyToMatch) {
-				case "next":
-					console.log("**entering next");
-					$("#next").show();
-					$("#next").data("targetUrl",parsedLinks[key]);
-					break;
-				case "prev":
-					console.log("**entering prev");
-					$("#prev").show();
-					console.log("**prev shown");
-					$("#prev").data("targetUrl",parsedLinks[key]);
-					break;
-				case "first":
-					console.log("**entering first");
-					$("#first").show();
-					$("#first").data("targetUrl",parsedLinks[key]);
-					break;
-				case "last":
-					console.log("**entering last");
-					$("#last").show();
-					$("#last").data("targetUrl",parsedLinks[key]);
-					break;	
-				default:
-					break;
-			} */
 			console.log("parsedLink:"+parsedLinks[key]);
 		}
 	}
 }
 
 function fetchBlogComments(blogId,sortorder){
+	console.log("fetchBlogComments"); 
 	//remove dynamically created contents
 	clearExtraCommentDivs();
-	
+	// to avoid flicker
+	$("#loadMoreComments").hide();
 	$.ajax({
 		url : 'rest/blogger/blogs/'+blogId+'/comments',
 		type : 'get',
@@ -291,54 +214,26 @@ function fetchBlogComments(blogId,sortorder){
 		dataType : 'json', 
 		data : {"offset": "0","pageSize": "3","sortOrder":sortorder},
 		success : function(data,textStatus, jqXHR) { 
-			console.log("success callback");
-			console.log("Blog data:"+data);
+			console.log("fetchBlogComments success callback:"+data);
 			for(i = 0;i < data.length;i++){ 
-			/*	console.log("i:"+i);
-				$("#comment"+i+"Content").text(data[i].comment);
+				var newcommentIdx = i;
+				console.log("new comment Id:"+newcommentIdx);
+				var commentData = data[i].comment;
+				var commentAuthor = data[i].commentor.userId;
+				var commentTime = $.format.prettyDate(data[i].postedDate);
+				comment = $("<div id ='comment'+newcommentIdx class='extradivs'>").append("<p id='comment'+newcommentIdx>"+commentData+"</p>")
+						       .append($("<div id ='comment'+newcommentIdx+'meta' class='commentmeta' style='margin-left: 40%;font-size: 12px;font-style: italic;'>Posted by </div>")
+							   .append("<span id = 'comment'+newcommentIdx+'author'>"+commentAuthor+" "+"</span>")
+						       .append("<time id = 'comment'+newcommentIdx+'time'>"+commentTime+"</time>"))
+							   .append('<hr/>');
+
+				$("#commentPosts").append(comment);
+				console.log("Total divs after adding :"+$("#commentPosts > div").length);
 				console.log("Comment:"+data[i].comment);
-				$("#comment"+i+"author").text(data[i].commentor.userId);
 				console.log("commentor:"+data[i].commentor.userId);
 				console.log("Blog id:"+data[i].blogId);
-				
 				console.log("Comment created time:"+data[i].postedDate);
 				console.log("Comment created time:"+($.format.prettyDate(data[i].postedDate)));
-
-				$("#comment"+i+"time").text($.format.prettyDate(data[i].postedDate)); */
-				
-				
-				var newcommentIdx = i;
-					console.log("new comment Id:"+newcommentIdx);
-					var commentData = data[i].comment;
-					var commentAuthor = data[i].commentor.userId;
-					var commentTime = $.format.prettyDate(data[i].postedDate);
-					comment = $("<div id ='comment'+newcommentIdx class='extradivs'>").append("<p id='comment'+newcommentIdx>"+commentData+"</p>")
-							       .append($("<div id ='comment'+newcommentIdx+'meta' class='commentmeta' style='margin-left: 40%;font-size: 12px;font-style: italic;'>Posted by </div>")
-								   .append("<span id = 'comment'+newcommentIdx+'author'>"+commentAuthor+" "+"</span>")
-							       .append("<time id = 'comment'+newcommentIdx+'time'>"+commentTime+"</time>"))
-								   .append('<hr/>');;
-
-					// add the element to the body
-					//$('#comment'+newcommentIdx+'meta').addClass('commentmeta');
-					// $("#commentPosts").append('<hr/>');
-					console.log("Adding comment"+newcommentIdx);
-					
-					$("#commentPosts").append(comment);
-					console.log("Total divs after adding :"+$("#commentPosts > div").length);
-					
-					
-					console.log("i:"+i);
-					//$("#comment"+newcommentIdx+"Content").text(data[i].comment);
-					console.log("Comment:"+data[i].comment);
-					//$("#comment"+newcommentIdx+"author").text(data[i].commentor.userId);
-					console.log("commentor:"+data[i].commentor.userId);
-					console.log("Blog id:"+data[i].blogId);
-					
-					console.log("Comment created time:"+data[i].postedDate);
-					console.log("Comment created time:"+($.format.prettyDate(data[i].postedDate)));
-
-				
-				
 			}
 			$("#loadMoreComments").data("loadedCommentCount",data.length);
 			configureCommentPagingOptions(jqXHR.getResponseHeader("LINK"));
@@ -346,19 +241,19 @@ function fetchBlogComments(blogId,sortorder){
 			
 		},
 		error : function( jqXHR,textStatus, errorThrown ) {
-			console.log("error callback :"+jqXHR);
-			console.log("error callback:"+textStatus);
-			console.log("error callback:"+errorThrown);
+			console.log("fetchBlogComments error callback :"+jqXHR+" textStatus:"+textStatus+" errorThrown:"+errorThrown);
+			// Need to show in a miniscreen.Let's leave it for now.
 			//showErrorScreen("No content Found");
 		},
 		 complete : function( jqXHR, textStatus ) {
-			console.log("complete callback"); 
+			console.log("fetchBlogComments complete callback"); 
 			$("#commentInput").val("");
 		}
 	});
 } 
 
 function parse_link_header(header) {
+	console.log("parse_link_header");
 	if (header.length == 0) {
 		throw new Error("input must not be of zero length");
 	}
@@ -379,76 +274,54 @@ function parse_link_header(header) {
 	return links;
 }
 
-function showNewBlogScreen(makeVisible){
-	if(makeVisible) {
-		hideAllScreens();
-		$("#newBlogScreen").show();
-	} else {
-		$("#newBlogScreen").hide();
-	}
-}
-
-function showBlogAndCommentsScreen(makeVisible) {
-	console.log("showBlogAndCommentsScreen enter");
+function showNewBlogScreen(){
+	console.log("showNewBlogScreen");
 	hideAllScreens();
-	if(makeVisible) {
-		var blogData = $("#selectedPost").data("blogData");
-		$("#homeScreenBody").hide();
-		console.log("showing showBlogAndCommentsScreen");
-		//console.log("Inside showBlogAndCommentsScreen attr:"+$(this).attr("blogData"));
-		console.log("blogData.title :"+blogData.title);
-		console.log("blogData.description :"+blogData.description);
-		$("#selectedHeading").text(blogData.title);
-		$("#selectedContent").text(blogData.description);
-		console.log("Token:"+window.sessionStorage.getItem('accessToken'));
-		fetchBlogComments(blogData.blogId);
-		
-		$("#addCommentOption").data("blogId",blogData.blogId);
-		$("#selectedPost").show();
-		$("#commentDetails").show();
-		
-		if(window.sessionStorage.getItem('accessToken') != null){
-			
-			$("#addCommentOption").show();
-			
-		}
-		else{
-			console.log("showing logged out comments screen");
-			
-			$("#loginToComment").show();
-			
-		}
-		
-	} else {
-		$("#selectedPost").hide();
-		$("#loginToComment").hide();
-		$("#addCommentOption").hide();
-		$("#commentDetails").hide();
-	}
-	
+	$("#newBlogScreen").show();
 }
 
+function showBlogAndCommentsScreen() {
+	console.log("showBlogAndCommentsScreen");
+	hideAllScreens();
+	//reset
+	$("#commentSortingOrder").val("oldest");
+	$("#loadMoreComments").removeData("sortorder");
+	
+	var blogData = $("#selectedPost").data("blogData");
+	console.log("blogData.title :"+blogData.title);
+	console.log("blogData.description :"+blogData.description);
+	$("#selectedHeading").text(blogData.title);
+	$("#selectedContent").text(blogData.description);
+	console.log("Token:"+window.sessionStorage.getItem('accessToken'));
+	fetchBlogComments(blogData.blogId);
+	$("#addCommentOption").data("blogId",blogData.blogId);
+	$("#selectedPost").show();
+	$("#commentDetails").show();
+	if(window.sessionStorage.getItem('accessToken') != null){
+		$("#addCommentOption").show();
+	}
+	else{
+		console.log("showing logged out blog and comments screen");
+		$("#loginToComment").show();
+	}
+}
 
 $(document).ready(function() {
-	//alert("I am an alert box!");
 	console.log("**Document Ready**");
 	configureMenuBarOptions("loggedOut");
 	fetchAllBlogs();
 	$("#homeScreenBody").show();
-	
 	$("#next").hide();	
 	$("#prev").hide();
 	$("#first").hide();	
 	$("#last").hide();
-	//showHSLoggedOutOptions(true);
-	//$('#commentOptionspost0').click(showBlogAndCommentsScreen(true));
+
 	$("#commentOptionspost0,#commentOptionspost1,#commentOptionspost2").click(function(e) {
 		var blogData = $(this).data("blogData");
 		console.log("Inside click attr blogData:"+blogData);
 		console.log("Inside click attr blogData.title:"+blogData.title);
-		hideAllScreens();
 		$("#selectedPost").data("blogData",blogData);
-		showBlogAndCommentsScreen(true);
+		showBlogAndCommentsScreen();
 	});
 		
 	$("#loginBtn").click(function(e) {
@@ -458,17 +331,15 @@ $(document).ready(function() {
 		$('#loginForm').trigger("reset");
 		$("#loginScreen").show();
 	});
+	
 	$("#signUp").click(function(e) {
 		hideAllScreens();
 		$("#signUpScreen").show();
 	});
 	
-	
-	
 	$("#updateProfileBtn").click(function(e) {
-		hideAllScreens();
 		var userId = $("#updateProfileBtn").data("userData");
-		console.log("profile userid :"+userId);
+		console.log("updateProfileBtn profile userid :"+userId);
 		$.ajax({
 			url : 'rest/blogger/user/'+userId,
 			type : 'get',
@@ -476,82 +347,27 @@ $(document).ready(function() {
 			headers: {"AUTHORIZATION": window.sessionStorage.getItem('accessToken')},
 			dataType : 'json', 
 			success : function(data,textStatus, jqXHR) { 
-				console.log("update profile success callback");
-				/*$("#signUpScreen").hide();
-				showHSLoggedInOptions(false);
-				showHSLoggedOutOptions(false);
-				$("#loginScreen").hide();*/
+				console.log("updateProfile success callback");
 				console.log("data.firstName :"+data.firstName);
 				console.log("data.lastName :"+data.lastName);
 				console.log("data.nickName :"+data.nickName);
 				$("#updatedfirstname").attr("placeholder",data.firstName);
 				$("#updatedlastname").attr("placeholder",data.lastName);
 				$("#updatednickname").attr("placeholder",data.nickName);
-				console.log("updateProfile screen")
-				$("#profileUpdateScreen").show();
-				
+				hideAllScreens();
+				$("#profileUpdateScreen").show();	
 			},
 			error : function( jqXHR,textStatus, errorThrown ) {
-				console.log("error callback :"+jqXHR);
-				console.log("error callback:"+textStatus);
-				console.log("error callback:"+errorThrown);
-				showErrorScreen("Unexpected Error");
+				console.log("updateProfile error callback :"+jqXHR+" textStatus:"+textStatus+" errorThrown:"+errorThrown);
+				//showErrorScreen("Unexpected Error");
 			},
 			 complete : function( jqXHR, textStatus ) {
-				console.log("complete callback"); 
+				console.log("updateProfile complete callback"); 
 			}
-			
 		});
-		
-		
 	});
 	
-/*
-	$("#newPostBtn").click(function(e) {
-		$("#signUpScreen").hide();
-		$("#loginScreen").hide();
-		$("#profileUpdateScreen").hide();
-		$("#newBlogForm").hide();
-		$("#homeScreenBody").hide();
-		$("#post1Description").hide();
-		$("#homeScreen").show();
-		$("#newBlogScreen").show();
-		});
-	$("#blog1").click(function(e) {
-		$("#signUpScreen").hide();
-		$("#loginScreen").hide();
-		$("#profileUpdateScreen").hide();
-		$("#newBlogForm").hide();
-		$("#newBlogScreen").hide();
-		$("#post1Description").hide();
-		$("#homeScreen").show();
-		$("#homeScreenBody").show();
-		});
-	$("#post1Heading").click(function(e) {
-		$("#signUpScreen").hide();
-		$("#loginScreen").hide();
-		$("#profileUpdateScreen").hide();
-		$("#newBlogForm").hide();
-		$("#newBlogScreen").hide();
-		$("#homeScreenBody").hide();
-		$("#homeScreen").show();
-		$("#post1Description").show();
-		});
-	$("#post1DescriptionCloseBtn").click(function(e) {
-		$("#signUpScreen").hide();
-		$("#loginScreen").hide();
-		$("#profileUpdateScreen").hide();
-		$("#newBlogForm").hide();
-		$("#newBlogScreen").hide();
-		$("#post1Description").hide();
-		$("#homeScreen").show();
-		$("#homeScreenBody").show();
-		});
-	*/	
-	
 	$("#saveSignUpDetailsBtn").click(function() {
-		hideAllScreens();
-
 		var userId = $("#userid").val();
 		console.log("userId:"+userId);
 		var passwordStr = $("#signuppassword").val();
@@ -575,51 +391,42 @@ $(document).ready(function() {
 			type : 'post',
 			contentType: "application/json; charset=utf-8",
 			success : function(data,textStatus, jqXHR) { 
-				console.log("success callback");
-				console.log(jqXHR.getResponseHeader("AUTHORIZATION"));
+				console.log("saveSignUpDetailsBtn success callback");
+				console.log("Token:"+jqXHR.getResponseHeader("AUTHORIZATION"));
 				window.sessionStorage.accessToken = jqXHR.getResponseHeader("AUTHORIZATION");
-				$("#loginScreen").hide();
 				console.log("signUpuserName callback:"+userId);
 				$("#updateProfileBtn").data("userData",userId);
 				$("#myblogsFilter").data("userData",userId);
-				
-				console.log("login screen hidden");
 				if(window.sessionStorage.getItem("prevAction") == "newBlog"){
 					console.log("removing PrevAction and showing new blog screen");
 					window.sessionStorage.removeItem("prevAction");
-					showNewBlogScreen(true);
+					showNewBlogScreen();
 				} else if(window.sessionStorage.getItem("prevAction") == "addComment") {
 					console.log("removing PrevAction and showing add comment screen");
 					window.sessionStorage.removeItem("prevAction");
-					showBlogAndCommentsScreen(true);
+					showBlogAndCommentsScreen();
 				}
 				else{
 					console.log("showing logged in options");
 					configureMenuBarOptions("loggedIn");
-					$("#homeScreenBody").show();
-					//showHSLoggedInOptions(true);
 					fetchAllBlogs(null,userId);
 				}
 			},
 			error : function( jqXHR,textStatus, errorThrown ) {
-				console.log("error callback :"+jqXHR);
-				console.log("error callback:"+textStatus);
-				console.log("error callback:"+errorThrown);
+				console.log("saveSignUpDetailsBtn error callback :"+jqXHR+" textStatus:"+textStatus+" errorThrown:"+errorThrown);
 				showErrorScreen("Unexpected error");
 			},
 			 complete : function( jqXHR, textStatus ) {
-				console.log("complete callback"); 
+				console.log("saveSignUpDetailsBtn complete callback"); 
 			},
 			data : JSON.stringify(user)
 		});
 	});
 	
 	$("#loginForm").submit(function(e) {
-		console.log("form submitted **");
-		console.log("form data 0:"+$(this).serializeArray());
-		hideAllScreens();
+		console.log("loginForm form submitted **");
+		console.log("form data array:"+$(this).serializeArray());
 		console.log("form data 1:"+$(this).serialize());
-		console.log("form data 2:"+$('form').serialize());
 		var signInUsername = $('#loginForm').find('input[name="userId"]').val();
 		console.log("signInuserName :"+signInUsername);
 		$("#submitButton").attr("disabled", true);
@@ -629,43 +436,34 @@ $(document).ready(function() {
 			   contentType: "application/x-www-form-urlencoded; charset=utf-8",
 			   data: $("#loginForm").serialize(), // serializes the form's elements.
 			   success : function(data,textStatus, jqXHR) { 
-					console.log("success callback");
+					console.log("loginForm success callback");
 					console.log(jqXHR.getResponseHeader("AUTHORIZATION"));
 					window.sessionStorage.accessToken = jqXHR.getResponseHeader("AUTHORIZATION");
-					console.log("stored prevAction:"+window.sessionStorage.getItem("prevAction"))
-					$("#loginScreen").hide();
-					console.log("signInuserName callback:"+signInUsername);
+					console.log("stored prevAction:"+window.sessionStorage.getItem("prevAction"));
 					$("#updateProfileBtn").data("userData",signInUsername);
 					$("#myblogsFilter").data("userData",signInUsername);
-					console.log("login screen hidden");
-					
 					if(window.sessionStorage.getItem("prevAction") == "newBlog"){
-						console.log("removing PrevAction and showing new blog screen");
+						console.log("loginForm removing PrevAction and showing new blog screen");
 						window.sessionStorage.removeItem("prevAction");
-						showNewBlogScreen(true);
+						showNewBlogScreen();
 					} else if(window.sessionStorage.getItem("prevAction") == "addComment") {
-						console.log("removing PrevAction and showing add comment screen");
+						console.log("loginForm removing PrevAction and showing add comment screen");
 						window.sessionStorage.removeItem("prevAction");
-						showBlogAndCommentsScreen(true);
+						showBlogAndCommentsScreen();
 					}
 					else{
-						console.log("showing logged in options");
-						configureMenuBarOptions("loggedIn");
-						//fetchAllBlogs(); // CHECK
+						console.log("loginForm showing logged in options");
 						fetchAllBlogs(null,signInUsername);
-						$("#homeScreenBody").show();
-						//showHSLoggedInOptions(true);
+						configureMenuBarOptions("loggedIn");
 					}
 					
 			   },
 			   error : function( jqXHR,textStatus, errorThrown ) {
-					console.log("error callback :"+jqXHR);
-					console.log("error callback:"+textStatus);
-					console.log("error callback:"+errorThrown);
+					console.log("loginForm error callback :"+jqXHR+" textStatus :"+textStatus+" errorThrown:"+errorThrown);
 					showErrorScreen("Unexpected error");
 			   },
 			   complete : function( jqXHR, textStatus ) {
-					console.log("complete callback");
+					console.log("loginForm complete callback");
 					$("#submitButton").attr("disabled", false);					
 			   }
 			 });
@@ -674,28 +472,30 @@ $(document).ready(function() {
 	});
 	
 	$("#logoutBtn").click(function(e) {
-			console.log("Logging out in progress")
-			window.sessionStorage.clear();
-			hideAllScreens();
-			configureMenuBarOptions("loggedOut");
-			
-			//$("#homeScreenBody").show();
-			fetchAllBlogs();
-			
-			//showHSLoggedOutOptions(true);
+		console.log("Logging out in progress")
+		window.sessionStorage.clear();
+		configureMenuBarOptions("loggedOut");
+		//reset
+		$("#myblogsFilter").val("My Blogs");
+		$("#commentSortingOrder").val("oldest");
+		//hide immediately
+		hideAllScreens();
+		fetchAllBlogs();
 	});
 	
 	$("#saveProfileBtn").click(function() {
-		hideAllScreens();
-		
+		console.log("saveProfileBtn");
 		var passwordStr = $("#updatedpassword").val();
-		console.log("passwordStr:"+passwordStr);
+		console.log("updated passwordStr:"+passwordStr);
 		var firstName = $("#updatedfirstname").val();
 		console.log("updated firstName:"+firstName);
 		var lastName = $("#updatedlastname").val();
 		console.log("updated lastName:"+lastName);
 		var nickName = $("#updatednickname").val();
 		console.log("updated nickName:"+nickName);
+		
+		var userId = $("#myblogsFilter").data("userData");
+		console.log("saveProfileBtn Logged in user :"+userId);
 		
 		var user = {
 			"password" : passwordStr,
@@ -709,22 +509,16 @@ $(document).ready(function() {
 			contentType: "application/json; charset=utf-8",
 			headers: {"AUTHORIZATION": window.sessionStorage.getItem('accessToken')},
 			success : function(data,textStatus, jqXHR) { 
-				console.log("success callback");
-				
-				
-				$("#profileUpdateScreen").hide();
+				console.log("saveProfileBtn success callback");
 				configureMenuBarOptions("loggedIn");
-				$("#homeScreenBody").show();
-				//showHSLoggedInOptions(true);
+				fetchAllBlogs(null,userId);	
 			},
 			error : function( jqXHR,textStatus, errorThrown ) {
-				console.log("error callback :"+jqXHR);
-				console.log("error callback:"+textStatus);
-				console.log("error callback:"+errorThrown);
+				console.log("saveProfileBtn error callback :"+jqXHR+" textStatus:"+textStatus+" errorThrown:"+errorThrown);
 				showErrorScreen("Unexpected error");
 			},
 			 complete : function( jqXHR, textStatus ) {
-				console.log("complete callback"); 
+				console.log("saveProfileBtn complete callback"); 
 			},
 			data : JSON.stringify(user)
 		});
@@ -741,34 +535,26 @@ $(document).ready(function() {
 	});
 	
 	$("#newBlogBtn_loggedOut").click(function(e) {
+		console.log("newBlogBtn_loggedOut");
 		hideAllScreens();
 		window.sessionStorage.setItem("prevAction","newBlog");
 		configureMenuBarOptions("login");
 		$('#loginForm').trigger("reset");
 		$("#loginScreen").show();
-		console.log("create new blog 3");
-		//$("#signUpScreen").hide();
-		//$("#loginScreen").hide();
-		//$("#profileUpdateScreen").hide();
-		//$("#newBlogScreen").hide();
-		//$("#homeScreenBody").hide();
-		//$("#post1Description").hide();
-		//$("#homeScreen").show();
-		//$("#newBlogForm").show();
 	});
 	
 	$("#newBlogBtn_loggedIn").click(function(e) {
-		hideAllScreens();
-		showNewBlogScreen(true);
+		console.log("newBlogBtn_loggedIn");
+		showNewBlogScreen();
 	});
 	
 	$("#submitNewBlogbtn").click(function() {
-		hideAllScreens();
+		console.log("submitNewBlogbtn");
 		var blogTitle = $("#newBlogTitle").val();
-		console.log("newBlogTitle:"+blogTitle);
+		console.log("new BlogTitle:"+blogTitle);
 		var blogDescription = $("#blogDescriptionIInput").val();
-		console.log("blogDescription:"+blogDescription);
-		var userId = $("#myblogsFilter").data("userData"); //CHECK
+		console.log("new blogDescription:"+blogDescription);
+		var userId = $("#myblogsFilter").data("userData"); 
 		console.log("Logged in user :"+userId);
 		var blog = {
 			"title" : blogTitle,
@@ -781,38 +567,28 @@ $(document).ready(function() {
 			contentType: "application/json; charset=utf-8",
 			headers: {"AUTHORIZATION": window.sessionStorage.getItem('accessToken')},
 			success : function(data,textStatus, jqXHR) { 
-				console.log("success callback");
-				//showHSLoggedInOptions(true);
-				$("#homeScreenBody").show();
+				console.log("submitNewBlogbtn success callback");
 				configureMenuBarOptions("loggedIn");
-				//fetchAllBlogs();
-				
-				
-				console.log("Logged in user :"+userId);
-				fetchAllBlogs(null,userId);
-				
+				fetchAllBlogs(null,userId);	
 			},
 			error : function( jqXHR,textStatus, errorThrown ) {
-				console.log("error callback :"+jqXHR);
-				console.log("error callback:"+textStatus);
-				console.log("error callback:"+errorThrown);
+				console.log("submitNewBlogbtn error callback :"+jqXHR+" textStatus:"+textStatus+" errorThrown:"+errorThrown);
 				showErrorScreen("Unexpected error");
 			},
 			 complete : function( jqXHR, textStatus ) {
-				console.log("complete callback"); 
+				console.log("submitNewBlogbtn complete callback"); 
 			},
 			data : JSON.stringify(blog)
 		});
 	});
 	
 	$("#submitCommentbtn").click(function() {
-		hideAllScreens();
+		console.log("submitCommentbtn");
 		var blogId = $("#addCommentOption").data("blogId");
-		console.log(" commentInput blogId:"+blogId);
+		console.log("commentInput blogId:"+blogId);
 		var commentDescription = $("#commentInput").val();
-		console.log("commentDescription:"+commentDescription);
-		
-		
+		console.log("commentInput commentDescription:"+commentDescription);
+		var sortOrder = $("#loadMoreComments").data("sortorder");
 		var comment = {
 			"comment" : commentDescription
 			
@@ -823,19 +599,23 @@ $(document).ready(function() {
 			contentType: "application/json; charset=utf-8",
 			headers: {"AUTHORIZATION": window.sessionStorage.getItem('accessToken')},
 			success : function(data,textStatus, jqXHR) { 
-				console.log("success callback");
+				console.log("submitCommentbtn success callback");
 				$("#commentInput").val(""); 
-				showBlogAndCommentsScreen(true);
 				
+				if(sortOrder === "newest") {
+					console.log("submitCommentbtn sorting order newest first");
+					fetchBlogComments(blogId,sortOrder);
+				} else {
+					console.log("submitCommentbtn sorting order oldest first");
+					fetchBlogComments(blogId);
+				}
 			},
 			error : function( jqXHR,textStatus, errorThrown ) {
-				console.log("error callback :"+jqXHR);
-				console.log("error callback:"+textStatus);
-				console.log("error callback:"+errorThrown);
+				console.log("submitCommentbtn error callback :"+jqXHR+" textStatus:"+textStatus+" errorThrown:"+errorThrown);
 				showErrorScreen("Unexpected error");
 			},
 			 complete : function( jqXHR, textStatus ) {
-				console.log("complete callback"); 
+				console.log("submitCommentbtn complete callback"); 
 			},
 			data : JSON.stringify(comment)
 		});
@@ -843,11 +623,10 @@ $(document).ready(function() {
 	
 	
 	$("#next,#prev,#first,#last").click(function() {
-		hideAllScreens();
+		console.log("blog pagination options");
 		var targetUrl = $(this).data("targetUrl");
 		console.log("targetUrl in pagingOptions click :"+targetUrl);
 		var userfilter;
-		
 		userPref = $('#myblogsFilter').val();
 		console.log("userpref :"+userPref);
 		if(window.sessionStorage.getItem('accessToken') != null && userPref === "My Blogs"){
@@ -863,74 +642,48 @@ $(document).ready(function() {
 			data : {"searchStr":searchStr,"userFilter":userfilter},
 			dataType : 'json', 
 			success : function(data,textStatus, jqXHR) { 
-				console.log("next success callback");
-				console.log("paging options new display func");
+				console.log("blog pagination options success callback");
 			    displayBlogs(data,textStatus, jqXHR);
-				
 			},
 			error : function( jqXHR,textStatus, errorThrown ) {
-				console.log("error callback :"+jqXHR);
-				console.log("error callback:"+textStatus);
-				console.log("error callback:"+errorThrown);
+				console.log("blog pagination options error callback :"+jqXHR+" textStatus:"+textStatus+" errorThrown:"+errorThrown);
 				showErrorScreen("Unexpected error");
 			},
 			 complete : function( jqXHR, textStatus ) {
-				console.log("complete callback"); 
+				console.log("blog pagination options complete callback"); 
 			}
-			
 		});
 	});
 	
 	$("#searchBtn").click(function(e) {
-		hideAllScreens();
 		var searchStr = $("#searchInput").val();
-		console.log("Searched for :"+searchStr);
+		console.log("searchBtn clicked -Searched for :"+searchStr);
 		fetchAllBlogs(searchStr);
 	
 	});
-	/*$('.dropdown-menu a').on('click', function(){    
-		$('.dropdown-toggle').html($(this).html() + '<span class="caret"></span>');  
-		console.log("Selected val :"+$(this).text())
-		var selectedOption = $(this).text();
-		var userId = $("#myblogsFilter").data("userData");
-		console.log("Logged in user :"+userId);
-		switch(selectedOption){
-			case "My Blogs":
-				fetchAllBlogs(null,userId);
-				break;
-			case "All Blogs":
-				fetchAllBlogs();
-				break;
-			default:
-				break;
-		}
-	});*/
+
 	
 	$(".navbar-brand").click(function(e) {
 		console.log("home button pressed");
-		hideAllScreens();
 		var userId = $("#myblogsFilter").data("userData");
 		console.log("Logged in user :"+userId);
 		if(window.sessionStorage.getItem('accessToken') != null){
 			console.log("showing logged in home screen");
 			configureMenuBarOptions("loggedIn");
+			$("#myblogsFilter").val("My Blogs");
 			fetchAllBlogs(null,userId);
-			
 		}
 		else{
 			console.log("showing logged out home screen");
 			configureMenuBarOptions("loggedOut");
 			fetchAllBlogs();
-			
 		}
 	
 	});
 	
 	$('#myblogsFilter').change(function(){ 
-		
 		var selectedOption = $(this).val();
 		console.log("myblogsFilter selectedOption:"+selectedOption);
-		
 		var userId = $("#myblogsFilter").data("userData");
 		console.log("myblogsFilter Logged in user :"+userId);
 		switch(selectedOption){
@@ -947,21 +700,20 @@ $(document).ready(function() {
 	
 	$('#commentSortingOrder').change(function(){ 
 		var sortingorder = $(this).val();
-		
 		console.log("sorting order sortingorder:"+sortingorder);
 		console.log("sorting order sortingorder text:"+$('#commentSortingOrder').find(":selected").text());
 		var blogId = $("#selectedPost").data("blogData").blogId;
 		console.log("sorting order blogId:"+blogId);
+		$("#loadMoreComments").hide();
+		$("#loadMoreComments").removeData("targetUrl");
 		$("#loadMoreComments").data("sortorder",sortingorder);
 		switch(sortingorder) {
 			case "oldest":
 				console.log("sorting order oldest first");
 				fetchBlogComments(blogId);
-				
 				break;
 			case "newest":
 				console.log("sorting order newest first");
-				
 				fetchBlogComments(blogId,sortingorder);
 				break;
 			default:
@@ -972,7 +724,6 @@ $(document).ready(function() {
 	
 	$("#loadMoreComments").click(function(e) {
 		console.log("loading more comments**");
-		
 		var targetUrl = $(this).data("targetUrl");
 		console.log("targetUrl in comment pagingOptions click :"+targetUrl);
 		var loadedCommentCount = $("#loadMoreComments").data("loadedCommentCount");
@@ -986,8 +737,7 @@ $(document).ready(function() {
 			data : {"sortOrder":sortorder},
 			dataType : 'json', 
 			success : function(data,textStatus, jqXHR) { 
-				console.log("next success callback");
-				console.log("comment paging options new display func");
+				console.log("loading more comments success callback");
 				for(i = 0;i < data.length;i++){ 
 					var newcommentIdx = (loadedCommentCount+i);
 					console.log("new comment Id:"+newcommentIdx);
@@ -1000,38 +750,24 @@ $(document).ready(function() {
 							       .append("<time id = 'comment'+newcommentIdx+'time'>"+commentTime+"</time>"))
 								   .append('<hr/>');;
 
-					// add the element to the body
-					//$('#comment'+newcommentIdx+'meta').addClass('commentmeta');
-					// $("#commentPosts").append('<hr/>');
-					console.log("Adding comment"+newcommentIdx);
-					
 					$("#commentPosts").append(comment);
 					console.log("Total divs after adding :"+$("#commentPosts > div").length);
-					
-					
-					console.log("i:"+i);
-					//$("#comment"+newcommentIdx+"Content").text(data[i].comment);
 					console.log("Comment:"+data[i].comment);
-					//$("#comment"+newcommentIdx+"author").text(data[i].commentor.userId);
 					console.log("commentor:"+data[i].commentor.userId);
 					console.log("Blog id:"+data[i].blogId);
-					
 					console.log("Comment created time:"+data[i].postedDate);
 					console.log("Comment created time:"+($.format.prettyDate(data[i].postedDate)));
 
-					//$("#comment"+newcommentIdx+"time").text($.format.prettyDate(data[i].postedDate));
 				}	
 				$("#loadMoreComments").data("loadedCommentCount",loadedCommentCount+data.length);
 				configureCommentPagingOptions(jqXHR.getResponseHeader("LINK"));	
 			},
 			error : function( jqXHR,textStatus, errorThrown ) {
-				console.log("error callback :"+jqXHR);
-				console.log("error callback:"+textStatus);
-				console.log("error callback:"+errorThrown);
+				console.log("loading more comments error callback :"+jqXHR+" textStatus:"+textStatus+" errorThrown :"+errorThrown);
 				showErrorScreen("Unexpected error");
 			},
 			 complete : function( jqXHR, textStatus ) {
-				console.log("complete callback"); 
+				console.log("loading more comments complete callback"); 
 			}
 			
 		});

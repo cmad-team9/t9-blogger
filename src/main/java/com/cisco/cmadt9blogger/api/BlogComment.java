@@ -2,8 +2,6 @@ package com.cisco.cmadt9blogger.api;
 
 import java.util.Date;
 
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,7 +15,7 @@ import javax.persistence.TemporalType;
 
 @Entity
 public class BlogComment {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int commentId;
@@ -30,14 +28,11 @@ public class BlogComment {
 	@ManyToOne
 	@JoinColumn(name = "blogId")
 	private Blog blog;
-	
-	
-	
-	
+
 	public BlogComment() {
 		super();
 	}
-	
+
 	public BlogComment(int commentId, String comment, User commentor, Date postedDate, Blog blog) {
 		super();
 		this.commentId = commentId;
@@ -46,12 +41,12 @@ public class BlogComment {
 		this.postedDate = postedDate;
 		this.blog = blog;
 	}
-	
+
 	@PrePersist
-	  protected void onCreate() {
+	protected void onCreate() {
 		postedDate = new Date();
-	  }
-	
+	}
+
 	public int getCommentId() {
 		return commentId;
 	}
