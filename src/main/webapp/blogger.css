@@ -44,7 +44,7 @@ H1 { text-align: center }
 	font-style: italic;
 }
 #selectedPost,#addCommentOption,#loginToComment,#commentDetails {
-	margin-left:25%;
+	margin-left:10%;
 }
 
 #commentHeading{
