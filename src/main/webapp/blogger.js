@@ -60,7 +60,7 @@ function fetchAllBlogs(searchStr,userfilter){
 		},
 		error : function( jqXHR,textStatus, errorThrown ) {
 			console.log("fetchAllBlogs error callback :"+jqXHR+" textStatus:"+textStatus+" errorThrown:"+errorThrown);
-			showErrorScreen("No content Found");
+			showErrorScreen("No content available.\nPlease create one");
 		},
 		 complete : function( jqXHR, textStatus ) {
 			console.log("fetchAllBlogs complete callback"); 
@@ -334,6 +334,11 @@ $(document).ready(function() {
 	
 	$("#signUp").click(function(e) {
 		hideAllScreens();
+		$("#userid").val("");
+		$("#signuppassword").val("");
+		$("#firstname").val("");
+		$("#lastname").val("");
+		$("#nickname").val("");
 		$("#signUpScreen").show();
 	});
 	
@@ -351,6 +356,7 @@ $(document).ready(function() {
 				console.log("data.firstName :"+data.firstName);
 				console.log("data.lastName :"+data.lastName);
 				console.log("data.nickName :"+data.nickName);
+				$("#updatedpassword").attr("placeholder","");
 				$("#updatedfirstname").attr("placeholder",data.firstName);
 				$("#updatedlastname").attr("placeholder",data.lastName);
 				$("#updatednickname").attr("placeholder",data.nickName);
@@ -409,6 +415,7 @@ $(document).ready(function() {
 				else{
 					console.log("showing logged in options");
 					configureMenuBarOptions("loggedIn");
+					$("#myblogsFilter").val("My Blogs");
 					fetchAllBlogs(null,userId);
 				}
 			},
@@ -418,6 +425,7 @@ $(document).ready(function() {
 			},
 			 complete : function( jqXHR, textStatus ) {
 				console.log("saveSignUpDetailsBtn complete callback"); 
+				
 			},
 			data : JSON.stringify(user)
 		});
@@ -453,6 +461,7 @@ $(document).ready(function() {
 					}
 					else{
 						console.log("loginForm showing logged in options");
+						$("#myblogsFilter").val("My Blogs");
 						fetchAllBlogs(null,signInUsername);
 						configureMenuBarOptions("loggedIn");
 					}
@@ -460,12 +469,20 @@ $(document).ready(function() {
 			   },
 			   error : function( jqXHR,textStatus, errorThrown ) {
 					console.log("loginForm error callback :"+jqXHR+" textStatus :"+textStatus+" errorThrown:"+errorThrown);
-					showErrorScreen("Unexpected error");
+					//showErrorScreen("Unexpected error");
 			   },
 			   complete : function( jqXHR, textStatus ) {
 					console.log("loginForm complete callback");
 					$("#submitButton").attr("disabled", false);					
-			   }
+			   },
+			   
+			   statusCode: {
+					401: function() {
+					  alert('Invalid username/password');
+					  $('#loginForm').trigger("reset");
+					}
+				}
+			   
 			 });
 
 		e.preventDefault(); // avoid to execute the actual submit of the form.
@@ -511,6 +528,7 @@ $(document).ready(function() {
 			success : function(data,textStatus, jqXHR) { 
 				console.log("saveProfileBtn success callback");
 				configureMenuBarOptions("loggedIn");
+				$("#myblogsFilter").val("My Blogs");
 				fetchAllBlogs(null,userId);	
 			},
 			error : function( jqXHR,textStatus, errorThrown ) {
@@ -569,16 +587,22 @@ $(document).ready(function() {
 			success : function(data,textStatus, jqXHR) { 
 				console.log("submitNewBlogbtn success callback");
 				configureMenuBarOptions("loggedIn");
+				$("#myblogsFilter").val("My Blogs");
 				fetchAllBlogs(null,userId);	
 			},
 			error : function( jqXHR,textStatus, errorThrown ) {
 				console.log("submitNewBlogbtn error callback :"+jqXHR+" textStatus:"+textStatus+" errorThrown:"+errorThrown);
-				showErrorScreen("Unexpected error");
+				//showErrorScreen("Unexpected error");
 			},
 			 complete : function( jqXHR, textStatus ) {
 				console.log("submitNewBlogbtn complete callback"); 
 			},
-			data : JSON.stringify(blog)
+			data : JSON.stringify(blog),
+			statusCode: {
+					400: function() {
+					  alert('Incorrect data entered.Kindly recheck');
+					}
+			}
 		});
 	});
 	
@@ -612,12 +636,17 @@ $(document).ready(function() {
 			},
 			error : function( jqXHR,textStatus, errorThrown ) {
 				console.log("submitCommentbtn error callback :"+jqXHR+" textStatus:"+textStatus+" errorThrown:"+errorThrown);
-				showErrorScreen("Unexpected error");
+				//showErrorScreen("Unexpected error");
 			},
 			 complete : function( jqXHR, textStatus ) {
 				console.log("submitCommentbtn complete callback"); 
 			},
-			data : JSON.stringify(comment)
+			data : JSON.stringify(comment),
+			statusCode: {
+					400: function() {
+					  alert('Incorrect data entered.Kindly recheck');
+					}
+			}
 		});
 	});
 	
@@ -667,6 +696,7 @@ $(document).ready(function() {
 		console.log("home button pressed");
 		var userId = $("#myblogsFilter").data("userData");
 		console.log("Logged in user :"+userId);
+		window.sessionStorage.removeItem("prevAction");
 		if(window.sessionStorage.getItem('accessToken') != null){
 			console.log("showing logged in home screen");
 			configureMenuBarOptions("loggedIn");

@@ -2,13 +2,17 @@ package com.cisco.cmadt9blogger.api;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class User {
 	//TODO - Make fields as Null/Not Null, Updatable or not, encrypted if needed
 	@Id	
+	@NotNull
 	private String userId;
+	@NotNull
 	private String password;
+	@NotNull
 	private String firstName;
 	private String lastName;
 	private String nickName;

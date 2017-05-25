@@ -11,9 +11,9 @@ import com.cisco.cmadt9blogger.api.BlogComment;
 import com.cisco.cmadt9blogger.api.BlogNotFoundException;
 import com.cisco.cmadt9blogger.api.Blogger;
 import com.cisco.cmadt9blogger.api.BloggerException;
-import com.cisco.cmadt9blogger.api.DuplicateBlogException;
+import com.cisco.cmadt9blogger.api.CommentNotFoundException;
 import com.cisco.cmadt9blogger.api.InvalidBlogException;
-import com.cisco.cmadt9blogger.api.InvalidCredentialsException;
+import com.cisco.cmadt9blogger.api.InvalidCommentException;
 import com.cisco.cmadt9blogger.api.InvalidUserDetailsException;
 import com.cisco.cmadt9blogger.api.User;
 import com.cisco.cmadt9blogger.api.UserAlreadyExistsException;
@@ -33,7 +33,10 @@ public class T9Blogger implements Blogger{
 
 	public String signupNewUser(User user)
 			throws InvalidUserDetailsException, UserAlreadyExistsException, BloggerException {
-		if (user == null)
+		if (user == null || 
+			!(checkStringCorrectness(user.getUserId()) && 
+			checkStringCorrectness(user.getPassword()) &&
+			checkStringCorrectness(user.getFirstName()))) 
 			throw new InvalidUserDetailsException();
 		if (userDao.readUser(user.getUserId()) != null)
 			throw new UserAlreadyExistsException();
@@ -41,19 +44,22 @@ public class T9Blogger implements Blogger{
 		userDao.createUser(user);
 		String token = issueToken(user.getUserId());
 		return token;
-
 	}
 
-	public String loginUser(String userId,String password) throws InvalidCredentialsException, BloggerException {
+	public String loginUser(String userId,String password) throws SecurityException,/*InvalidCredentialsException, */BloggerException {
 		// Authenticate the user using the credentials provided
-		authenticate(userId, password);
-		// Issue a token for the user
-		String token = issueToken(userId);
-		// Return the token on the response
-		if(token == null){
-			throw new InvalidCredentialsException();
-		}else
-			return token;
+		if(authenticate(userId, password)) {
+			// Issue a token for the user
+			String token = issueToken(userId);
+			// Return the token on the response
+			if(token == null){
+				throw new BloggerException();
+			}else
+				return token;
+		} else {
+			throw new SecurityException("Invalid user/password");
+		}
+		
 	}
 
 	public User getUserDetails(String userId) throws UserNotFoundException, BloggerException {
@@ -65,11 +71,10 @@ public class T9Blogger implements Blogger{
 
 
 	@Override
-	public void addBlog(Blog blog) throws InvalidBlogException, DuplicateBlogException, BloggerException {
-		if (blog == null)
+	public void addBlog(Blog blog) throws InvalidBlogException,/* DuplicateBlogException, */BloggerException {
+		if (blog == null || !(checkStringCorrectness(blog.getTitle()) && 
+				              checkStringCorrectness(blog.getDescription())) )
 			throw new InvalidBlogException();
-		/*if (blogDao.readUser(user.getUserId()) != null)
-			throw new UserAlreadyExistsException();*/
 		blogDao.createBlog(blog);
 	}
 
@@ -93,13 +98,63 @@ public class T9Blogger implements Blogger{
 
 	@Override
 	public void updateUserProfile(User user) throws InvalidUserDetailsException, BloggerException {
-		if (user == null)
+		if (user == null || (userDao.readUser(user.getUserId()) == null))
 			throw new InvalidUserDetailsException();
-		/*if (blogDao.readUser(user.getUserId()) != null)
-			throw new UserAlreadyExistsException();*/
 		userDao.updateUser(user);
 	}
 
+	@Override
+	public void addComment(BlogComment comment) throws InvalidCommentException, BloggerException {
+		if(comment == null || !(checkStringCorrectness(comment.getComment())) ){
+			throw new InvalidCommentException();
+		}
+		commentDAO.createComment(comment);
+
+	}
+
+	@Override
+	public List<BlogComment> getAllComments(int blogId,int offset,int pageSize,String sortOrder) throws CommentNotFoundException, BloggerException {
+		List<BlogComment> commentList = commentDAO.getAllComments(blogId,offset,pageSize,sortOrder);
+		if (commentList == null || commentList.isEmpty())
+			throw new CommentNotFoundException();
+		return commentList;
+	}
+
+	@Override
+	public long getBlogCount(String searchStr,String userFilter) throws BloggerException {
+		return blogDao.getBlogCount(searchStr,userFilter);
+	}
+
+	@Override
+	public long getCommentCount(int blogId) throws BloggerException {
+		return commentDAO.getCommentCount(blogId);
+	}
+
+	@Override
+	public void deleteUser(String userId) throws UserNotFoundException, BloggerException {
+		User user = userDao.readUser(userId);
+		if (user == null)
+			throw new UserNotFoundException();
+		userDao.deleteUser(userId);
+	}
+
+	@Override
+	public void deleteBlog(int blogId) throws BlogNotFoundException, BloggerException {
+		Blog blog = blogDao.readBlog(blogId);
+		if (blog == null)
+			throw new BlogNotFoundException();
+		blogDao.deleteBlog(blogId);
+	}
+
+	@Override
+	public void deleteComment(int commentId) throws CommentNotFoundException, BloggerException {
+		BlogComment comment = commentDAO.readComment(commentId);
+		if (comment == null)
+			throw new CommentNotFoundException();
+		commentDAO.deleteComment(commentId);
+		
+	}
+	
 	private String issueToken(String userId) {
 		String jwtToken = null;
 		try {
@@ -118,61 +173,29 @@ public class T9Blogger implements Blogger{
 		return jwtToken;
 	}
 
-	private void authenticate(String userId, String password) {
+	private boolean authenticate(String userId, String password) {
 		System.out.println("T9Blogger authenticate userId:"+userId);
+		boolean retVal = false;
 		User user = userDao.readUser(userId);
-		String storedPassword = user.getPassword();
-		System.out.println("authenticate storedPassword:"+storedPassword);
-		System.out.println("authenticate password != storedPassword:"+password.equals(storedPassword));
-		if(!password.equals(storedPassword)){
-			throw new SecurityException("Invalid user/password");
+		if(user != null){
+			String storedPassword = user.getPassword();
+			System.out.println("authenticate storedPassword:"+storedPassword);
+			System.out.println("authenticate password != storedPassword:"+password.equals(storedPassword));
+			if(password.equals(storedPassword)){
+				//throw new SecurityException("Invalid user/password");
+				retVal = true;
+			}
 		}
+		return retVal;
 	}
-
-	@Override
-	public void addComment(BlogComment comment) throws BloggerException {
-		if(comment == null){
-			//TODO Check others
-			throw new BloggerException();
+	
+	private boolean checkStringCorrectness(String str){
+		if(str == null || str.trim().equals("")){
+			System.out.println("str :"+str);
+			return false;
+		}else{
+			System.out.println("str true :"+str);
+			return true;
 		}
-		commentDAO.createComment(comment);
-
-	}
-
-	@Override
-	public List<BlogComment> getAllComments(int blogId,int offset,int pageSize,String sortOrder) throws BlogNotFoundException, BloggerException {
-		List<BlogComment> commentList = commentDAO.getAllComments(blogId,offset,pageSize,sortOrder);
-		//TODO Check for other exceptions
-		if (commentList == null || commentList.isEmpty())
-			throw new BlogNotFoundException();
-		return commentList;
-	}
-
-	@Override
-	public long getBlogCount(String searchStr,String userFilter) throws BloggerException {
-		// TODO 
-		return blogDao.getBlogCount(searchStr,userFilter);
-	}
-
-	@Override
-	public long getCommentCount(int blogId) throws BloggerException {
-		// TODO Auto-generated method stub
-		return commentDAO.getCommentCount(blogId);
-	}
-
-	@Override
-	public void deleteUser(String userId) throws UserNotFoundException, BloggerException {
-		User user = userDao.readUser(userId);
-		if (user == null)
-			throw new UserNotFoundException();
-		userDao.deleteUser(userId);
-	}
-
-	@Override
-	public void deleteBlog(int blogId) throws BlogNotFoundException, BloggerException {
-		Blog blog = blogDao.readBlog(blogId);
-		if (blog == null)
-			throw new BlogNotFoundException();
-		blogDao.deleteBlog(blogId);
 	}
 }

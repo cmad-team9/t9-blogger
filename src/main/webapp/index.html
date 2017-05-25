@@ -98,135 +98,135 @@
 							<a href="#" id="last" style="display:inline;"> Last Page </a>
 					</div>
 				</div>
-			</div>
+		<!--	</div> -->
 			
-			<div id='loginScreen'>
-				<h4>Welcome! Login here</h4>
-				<form name="loginForm" id="loginForm">
-					<div>
-						<label class="title">Username:</label>
-						<input type="text" id="signinUserName" name="userId">
-					</div>
-					<div>
-						<label class="title">Password:</label>
-						<input type="password" id="signInpassword" name="password">
-					</div>
-					<div colspan="2" align="right" >
-						<input type="submit" id="submitButton" name="submitButton" value="Submit">
-					</div>
-				</form>
-				<a href="#" id="signUp">Don't have a login ? Sign Up</a> 
-			</div>
+				<div id='loginScreen'>
+					<h4>Welcome! Login here</h4>
+					<form name="loginForm" id="loginForm">
+						<div>
+							<label class="title">Username:</label>
+							<input type="text" id="signinUserName" name="userId">
+						</div>
+						<div>
+							<label class="title">Password:</label>
+							<input type="password" id="signInpassword" name="password">
+						</div>
+						<div colspan="2" align="right" >
+							<input type="submit" id="submitButton" name="submitButton" value="Submit">
+						</div>
+					</form>
+					<a href="#" id="signUp">Don't have a login ? Sign Up</a> 
+				</div>
 			
-			<div id='signUpScreen'>
-				<h2>Signing up is easy :)</h2>
-				<table>
-					<tr>
-						<td>Email(Userid):</td>
-						<td><input id='userid'/></td>
-					</tr>
-					<tr>
-						<td>Password:</td>
-						<td><input type='password' id='signuppassword'></td>
-					</tr>
-					<tr>
-						<td>Firstname:</td>
-						<td><input id='firstname' /></td>
-					</tr>
-					<tr>
-						<td>Lastname:</td>
-						<td><input id='lastname' /></td>
-					</tr>
-					<tr>
-						<td>Nick Name(visible name):</td>
-						<td><input id='nickname' /></td>
-					</tr>
-					<tr>
-						<td colspan="2" align="right"><button id="saveSignUpDetailsBtn">Sign up</button></td>
-					</tr>
-				</table>
-			</div>
+				<div id='signUpScreen'>
+					<h2>Signing up is easy :)</h2>
+					<table>
+						<tr>
+							<td>Email(Userid):</td>
+							<td><input id='userid'/></td>
+						</tr>
+						<tr>
+							<td>Password:</td>
+							<td><input type='password' id='signuppassword'></td>
+						</tr>
+						<tr>
+							<td>Firstname:</td>
+							<td><input id='firstname' /></td>
+						</tr>
+						<tr>
+							<td>Lastname:</td>
+							<td><input id='lastname' /></td>
+						</tr>
+						<tr>
+							<td>Nick Name(visible name):</td>
+							<td><input id='nickname' /></td>
+						</tr>
+						<tr>
+							<td colspan="2" align="right"><button id="saveSignUpDetailsBtn">Sign up</button></td>
+						</tr>
+					</table>
+				</div>
 			
-			<div id='profileUpdateScreen'>
-			<h2>Update your profile</h2>
-				<table>
-					<tr>
-						<td>Password:</td>
-						<td><input type='password' id='updatedpassword'></td>
-					</tr>
-					<tr>
-						<td>Firstname:</td>
-						<td><input id='updatedfirstname' /></td>
-					</tr>
-					<tr>
-						<td>Lastname:</td>
-						<td><input id='updatedlastname' /></td>
-					</tr>
-					<tr>
-						<td>Nick Name(visible name):</td>
-						<td><input id='updatednickname' /></td>
-					</tr>
-					<tr>
-						<td colspan="2" align="right"><button id="saveProfileBtn">Save Details</button></td>
-					</tr>
-				</table>
-			</div>
+				<div id='profileUpdateScreen'>
+				<h2>Update your profile</h2>
+					<table>
+						<tr>
+							<td>Password:</td>
+							<td><input type='password' id='updatedpassword'></td>
+						</tr>
+						<tr>
+							<td>Firstname:</td>
+							<td><input id='updatedfirstname' /></td>
+						</tr>
+						<tr>
+							<td>Lastname:</td>
+							<td><input id='updatedlastname' /></td>
+						</tr>
+						<tr>
+							<td>Nick Name(visible name):</td>
+							<td><input id='updatednickname' /></td>
+						</tr>
+						<tr>
+							<td colspan="2" align="right"><button id="saveProfileBtn">Save Details</button></td>
+						</tr>
+					</table>
+				</div>
 		
-			<div id = "newBlogScreen">
-				<h3>New Blog</h3>
-				<div class="form-group">
-					<label>Blog title</label>
-					<input type="text" class="form-control" id="newBlogTitle" placeholder="Blog Title">
-				</div>
-						   
-				<div class="form-group">
-					<label>Description</label>
-					<textarea rows="10" class="form-control" id="blogDescriptionIInput" placeholder="Blog Description"></textarea>
-				</div>		  
-				<button type="submit" id="submitNewBlogbtn">Submit</button>	
-			</div>
-			
-			<div id = "errorScreen">
-				<p id ="errorMsg">
-						
-				<p>	
-			</div>
-			
-			<div id = "blogAndCommentsScreen">
-				
-				<div id = "selectedPost">
-					<!--<a href="#" id ="selectedHeading" data-toggle="modal" data-target="#selectedDescriptionModal">SELECTED POST TITLE</a> -->
-					<h3 id ="selectedHeading" style="font-weight: bold;"></h3>
-					<p id ="selectedContent">
-						
-					<p>
-				</div>
-				<br>
-				<br>
-				<div id ="addCommentOption">
+				<div id = "newBlogScreen">
+					<h3>New Blog</h3>
 					<div class="form-group">
-						<label>Add a comment</label>
-						<textarea rows="3" class="form-control" id="commentInput" placeholder="Your Comment"></textarea>
-					</div>		  
-					<button type="submit" id="submitCommentbtn">Post Comment</button>
-				</div>
-				<a href="#" id="loginToComment">Please login/signup to comment</a> 
-				<br>
-				<br>
-				<div id = "commentDetails">
-					<h4 style ="text-decoration: underline"id ="commentHeading">Comments</h4>
-					<select id = "commentSortingOrder">
-						<option value="oldest">Oldest First</option>
-						<option value="newest">Recent First</option>
-					</select>
-					<hr />
-					<div id ="commentPosts">
-					
+						<label>Blog title</label>
+						<input type="text" class="form-control" id="newBlogTitle" placeholder="Blog Title">
 					</div>
-					<a href="#" id="loadMoreComments">Load More Comments</a> 
+							   
+					<div class="form-group">
+						<label>Description</label>
+						<textarea rows="10" class="form-control" id="blogDescriptionIInput" placeholder="Blog Description"></textarea>
+					</div>		  
+					<button type="submit" id="submitNewBlogbtn">Submit</button>	
+				</div>
+				
+				<div id = "errorScreen">
+					<p id ="errorMsg">
+							
+					<p>	
+				</div>
+			
+				<div id = "blogAndCommentsScreen">
+					
+					<div id = "selectedPost">
+						<!--<a href="#" id ="selectedHeading" data-toggle="modal" data-target="#selectedDescriptionModal">SELECTED POST TITLE</a> -->
+						<h3 id ="selectedHeading" style="font-weight: bold;"></h3>
+						<p id ="selectedContent">
+							
+						<p>
+					</div>
+					<br>
+					<br>
+					<div id ="addCommentOption">
+						<div class="form-group">
+							<label>Add a comment</label>
+							<textarea rows="3" class="form-control" id="commentInput" placeholder="Your Comment"></textarea>
+						</div>		  
+						<button type="submit" id="submitCommentbtn">Post Comment</button>
+					</div>
+					<a href="#" id="loginToComment">Please login/signup to comment</a> 
+					<br>
+					<br>
+					<div id = "commentDetails">
+						<h4 style ="text-decoration: underline"id ="commentHeading">Comments</h4>
+						<select id = "commentSortingOrder">
+							<option value="oldest">Oldest First</option>
+							<option value="newest">Recent First</option>
+						</select>
+						<hr />
+						<div id ="commentPosts">
+						
+						</div>
+						<a href="#" id="loadMoreComments">Load More Comments</a> 
+					</div>
 				</div>
 			</div>
-		</div>
 	</div>
 	<script src="jquery-dateFormat.js"></script>
 	<script src="blogger.js"></script>

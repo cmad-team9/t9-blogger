@@ -1,17 +1,21 @@
 package com.cisco.cmadt9blogger.api;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Blog {
@@ -21,15 +25,18 @@ public class Blog {
 	private int blogId;
 	@OneToOne
 	@JoinColumn(name = "userId")
+	@NotNull
 	private User user;
+	@NotNull
 	private String title;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date postedDate;
 	@Column(length=5000)
+	@NotNull
 	private String description;
-	//Only delete ?
-	//@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-	//private List<BlogComment> comments;
+
+	@OneToMany(mappedBy="blog",cascade=CascadeType.REMOVE)
+	private List<BlogComment> comments;
 
 	public Blog() {
 		super();
@@ -102,14 +109,5 @@ public class Blog {
 		this.postedDate = postedDate;
 	}
 
-
-	//	public List<BlogComment> getComments() {
-	//		return comments;
-	//	}
-	//
-	//
-	//	public void setComments(List<BlogComment> comments) {
-	//		this.comments = comments;
-	//	}
 
 }

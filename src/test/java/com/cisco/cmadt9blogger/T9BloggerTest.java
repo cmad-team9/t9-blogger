@@ -1,5 +1,6 @@
 package com.cisco.cmadt9blogger;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.cisco.cmadt9blogger.api.Blog;
+import com.cisco.cmadt9blogger.api.BlogComment;
 import com.cisco.cmadt9blogger.api.BlogNotFoundException;
 import com.cisco.cmadt9blogger.api.Blogger;
 import com.cisco.cmadt9blogger.api.BloggerException;
@@ -25,8 +27,10 @@ import com.cisco.cmadt9blogger.service.T9Blogger;
 
 public class T9BloggerTest {
 
-
 	private static Blogger blogger;
+	private User user = null;
+	private Blog blog = null;
+	private BlogComment comment = null;
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		blogger = new T9Blogger();
@@ -39,19 +43,38 @@ public class T9BloggerTest {
 
 	@Before
 	public void setUp() throws Exception {
+		
+		// Set up user
+		user = new User();
+		user.setUserId("ninut");
+		user.setPassword("ninut");
+		user.setFirstName("ninut");
+		
+		//Set up blog
+		blog = new Blog();
+		blog.setTitle("HELLO WORLD!(UT)");
+		blog.setDescription("HELLO ...WORLD IS NICE(UT)");
+		
+		//Set up comment
+		comment = new BlogComment();
+		comment.setComment("nice write (UT)");
+		comment.setBlog(blog);
+		
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		user = null;
+		blog = null;
+		comment = null;
 	}
 
 	@Test
 	public void signupNewUserTest() {
-		User user = new User();
-		user.setUserId("ninut");
-		user.setPassword("ninut");
 		try {
 			blogger.signupNewUser(user);
+			//clean up
+			blogger.deleteUser("ninut");
 		} catch (InvalidUserDetailsException iude) {
 			fail();
 		} catch (UserAlreadyExistsException uaee) {
@@ -62,79 +85,143 @@ public class T9BloggerTest {
 			e.printStackTrace();
 			fail();
 		}
-		blogger.deleteUser("ninut");
-	}		
+		
+	}
+	
+	@Test
+	public void signupNewUserTest_N01() {
+		User invalidUser = new User();
+		invalidUser.setUserId("invalidUser");
+		try {
+			blogger.signupNewUser(invalidUser);
+			fail("Expecting InvalidUserDetailsException");
+		} catch (InvalidUserDetailsException iude) {
+			
+		} catch (UserAlreadyExistsException uaee) {
+			fail();
+		} catch (BloggerException be) {
+			fail();
+		}catch(Exception e){
+			e.printStackTrace();
+			fail();
+		}
+		
+	}
 
 	@Test
 	public void loginUserTest(){
-		User user = new User();
-		user.setUserId("ninut");
-		user.setPassword("ninut");
 		try {
 			blogger.signupNewUser(user);
 			blogger.loginUser("ninut","ninut");
+			//cleanup
+			blogger.deleteUser("ninut");
 		} catch (InvalidCredentialsException iude) {
 			fail();
 		}catch(Exception e){
 			e.printStackTrace();
 			fail();
 		}
-		blogger.deleteUser("ninut");
 	}
 
 	@Test
 	public void getUserDetailsTest(){
-		User user = new User();
-		user.setUserId("ninut");
-		user.setPassword("ninut");
-
 		try {
 			blogger.signupNewUser(user);
 			blogger.getUserDetails("ninut");
+			//cleanup
+			blogger.deleteUser("ninut");
 		} catch (UserNotFoundException unfe) {
 			fail();
 		}catch(Exception e){
 			e.printStackTrace();
 			fail();
 		}
-		blogger.deleteUser("ninut");
 	}
 
 	@Test
 	public void addAndReadBlogTest(){
-		Blog blog = new Blog();
-		blog.setTitle("HELLO WORLD!");
-		blog.setDescription("HELLO ...WORLD IS NICE");
+
 		int blogId = -1;
 		try {
 			blogger.addBlog(blog);
 			List<Blog> blogList = blogger.getAllBlogs(0,2,null,null);
 			blogId = blogList.get(0).getBlogId();
+			//clean up
+			blogger.deleteBlog(blogId);
 		} catch (BlogNotFoundException bnfe) {
 			fail();
 		}catch(Exception e){
 			e.printStackTrace();
 			fail();
 		}
-		blogger.deleteBlog(blogId);
 	}
 
 	@Test
 	public void addAndReadCommentTest(){
-		Blog blog = new Blog();
-		blog.setTitle("HELLO WORLD!");
-		blog.setDescription("HELLO ...WORLD IS NICE");
-		int blogId = -1;
+		int blogId = -1, blogCommentId = -1;
 		try {
 			blogger.addBlog(blog);
 			List<Blog> blogList = blogger.getAllBlogs(0,2,null,null);
 			blogId = blogList.get(0).getBlogId();
+			blogger.addComment(comment);
+			List<BlogComment> blogCommentList = blogger.getAllComments(blogId,0, 2, null);
+			blogCommentId = blogCommentList.get(0).getCommentId();
+			System.out.println("Comment id :"+blogCommentId);
+			// clean up
+			blogger.deleteBlog(blogId);
 		} catch (BlogNotFoundException bnfe) {
 			fail();
 		}catch(Exception e){
 			e.printStackTrace();
 			fail();
 		}
-		blogger.deleteBlog(blogId);
+	}
+	
+	@Test
+	public void getBlogCountTest(){
+		int blogId = -1;
+		try {
+			//get initial count
+			long initialCount = blogger.getBlogCount(null, null);
+			
+			blogger.addBlog(blog);
+			long count = blogger.getBlogCount(null, null);
+			assertEquals((initialCount+1), count);
+			// clean up
+			List<Blog> blogList = blogger.getAllBlogs(0,2,null,null);
+			blogId = blogList.get(0).getBlogId();
+			System.out.println("getBlogCountTest blogId :"+blogId);
+			blogger.deleteBlog(blogId);
+		} catch (BlogNotFoundException bnfe) {
+			fail();
+		}catch(Exception e){
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	public void getCommentCountTest(){
+		int blogId = -1;
+		try {
+			
+			blogger.addBlog(blog);
+			List<Blog> blogList = blogger.getAllBlogs(0,2,null,null);
+			blogId = blogList.get(0).getBlogId();
+			
+			//get initial count
+			long initialCount = blogger.getCommentCount(blogId);
+			blogger.addComment(comment);
+			
+			long count = blogger.getCommentCount(blogId);
+			assertEquals((initialCount+1), count);
+			// clean up
+			blogger.deleteBlog(blogId);
+		} catch (BlogNotFoundException bnfe) {
+			fail();
+		}catch(Exception e){
+			e.printStackTrace();
+			fail();
+		}
 	}
 }

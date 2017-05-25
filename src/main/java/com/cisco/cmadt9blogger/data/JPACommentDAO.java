@@ -23,7 +23,12 @@ public class JPACommentDAO extends JPABloggerDAO implements CommentDAO{
 
 	@Override
 	public BlogComment readComment(int commentId) {
-		return null;
+		EntityManager em = factory.createEntityManager();
+		em.getTransaction().begin();
+		BlogComment comment = em.find(BlogComment.class,commentId);
+		em.getTransaction().commit();
+		em.close();
+		return comment;
 	}
 
 	@Override
@@ -71,5 +76,15 @@ public class JPACommentDAO extends JPABloggerDAO implements CommentDAO{
 		em.getTransaction().commit();
 		em.close();
 		return blogCommentCount;
+	}
+
+	@Override
+	public void deleteComment(int commentId) {
+		EntityManager em = factory.createEntityManager();
+		em.getTransaction().begin();
+		BlogComment comment = em.find(BlogComment.class,commentId);
+		em.remove(comment);
+		em.getTransaction().commit();
+		em.close();
 	}
 }

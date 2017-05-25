@@ -9,4 +9,5 @@ public interface CommentDAO {
 	BlogComment readComment(int commentId);
 	List<BlogComment> getAllComments(int blogId,int offset,int pageSize,String sortOrder);
 	long getCommentCount(int blogId);
+	void deleteComment(int commentId);
 }

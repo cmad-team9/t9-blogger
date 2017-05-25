@@ -12,6 +12,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class BlogComment {
@@ -19,14 +20,17 @@ public class BlogComment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int commentId;
+	@NotNull
 	private String comment;
 	@OneToOne
 	@JoinColumn(name = "userId")
+	@NotNull
 	private User commentor;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date postedDate;
 	@ManyToOne
 	@JoinColumn(name = "blogId")
+	@NotNull
 	private Blog blog;
 
 	public BlogComment() {
